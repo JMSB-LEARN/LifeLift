@@ -1,0 +1,23 @@
+:host {
+    display: block;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    background-color: #cfcfcf;
+    box-shadow: 0em 0em 0.5em #cfcfcf;
+}
+.routerLinkContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+nav a {
+    margin: 0 1rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold
+}
+
