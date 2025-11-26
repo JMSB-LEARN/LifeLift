@@ -3,21 +3,33 @@
     position: sticky;
     top: 0;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    background-color: #cfcfcf;
-    box-shadow: 0em 0em 0.5em #cfcfcf;
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
 .routerLinkContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-}
-nav a {
-    margin: 0 1rem;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md) var(--spacing-lg);
 }
 
+nav {
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--surface-color);
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: var(--highlight-color);
+}
