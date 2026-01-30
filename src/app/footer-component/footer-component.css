@@ -1,5 +1,5 @@
 :host {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     display: block;
     width: 100%;
@@ -23,7 +23,7 @@ a:hover {
 }
 
 .footer-content {
-    max-width: 1200px;
+    max-width: var(--windows-max-width);
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

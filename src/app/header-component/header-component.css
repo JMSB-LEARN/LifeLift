@@ -2,7 +2,7 @@
     display: block;
     position: sticky;
     top: 0;
-    width: 100%;
+    height: fit-content;
     z-index: 1000;
     background-color: var(--primary-color);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: var(--windows-max-width);
     margin: 0 auto;
     padding: var(--spacing-md) var(--spacing-lg);
 }
@@ -32,4 +32,11 @@ nav a {
 
 nav a:hover {
     color: var(--highlight-color);
+}
+
+img {
+    -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black);
+    filter: drop-shadow(0 1px 1px var(--highlight-color)) drop-shadow(-1px -1px 2px black) drop-shadow(1px -1px 2px black);
+    width: 7em;
+    margin-right: 30%;
 }

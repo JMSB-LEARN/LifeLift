@@ -14,12 +14,12 @@
 }
 
 .hero-content {
-    max-width: 800px;
+    max-width: var(--windows-max-width);
     margin: 0 auto;
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: var(--font-size-2xl);
     font-weight: 800;
     margin-bottom: var(--spacing-md);
     line-height: 1.2;
