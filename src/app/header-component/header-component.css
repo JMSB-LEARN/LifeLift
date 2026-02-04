@@ -23,6 +23,8 @@ nav {
 }
 
 nav a {
+    height: wrap-content;
+    align-self: center;
     text-decoration: none;
     color: var(--surface-color);
     font-weight: 600;
