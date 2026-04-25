@@ -1,3 +1,38 @@
-<nav>
-  <a routerLink="/signup">Sign Up</a>
-</nav>
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome Back</h1>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <div class="form-card">
+                <section>
+                    <h2>Login to your account</h2>
+<input
+  type="text"
+  formControlName="username"
+  placeholder="Username"
+  required
+  [class.invalid-input]="username?.invalid && username?.touched"
+/>
+
+<div class="field-error" *ngIf="username?.touched && username?.invalid">
+  <span *ngIf="username?.errors?.['required']">
+    Username is required.
+  </span>
+</div>
+
+                    <input type="password" formControlName="password" placeholder="Password" required [class.invalid-input]="password?.invalid && password?.touched">
+                    <div class="field-error" *ngIf="password?.touched && password?.invalid">
+                        <span *ngIf="password?.errors?.['required']">Password is required.</span>
+                    </div>
+
+                    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+                </section>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-login">Log In</button>
+                <button type="button" class="btn-signup" routerLink="/signup">Don't have an account? Sign Up</button>
+            </div>
+        </form>
+    </div>
+</section>
