@@ -4,13 +4,19 @@ import { api } from './ApiClient';
 export interface User {
   id: string;
   email: string;
+  username?: string;
+  first_name?: string;
+  surname?: string;
+  second_surname?: string;
   name?: string;
+  created_at?: string;
   // Add other user fields here
 }
 
 // Define the expected response from the login endpoint
 interface LoginResponse {
   token: string;
+  user?: User;
 }
 
 // Define the expected response from the register endpoint
@@ -30,6 +36,8 @@ interface RegisterPayload {
 }
 
 class AuthService {
+  private currentUser: User | null = null;
+
   /**
    * Authenticates the user and sets the access token in memory
    */
@@ -41,6 +49,11 @@ class AuthService {
 
     // Store the token in the ApiClient instance memory
     api.setToken(data.token);
+    
+    // Store user info if provided in response
+    if (data.user) {
+      this.currentUser = data.user;
+    }
   }
 
   /**
@@ -49,6 +62,20 @@ class AuthService {
   async register(payload: RegisterPayload): Promise<User> {
     const { data } = await api.client.post<RegisterResponse>('/register', payload);
     return data.user;
+  }
+
+  /**
+   * Gets the current logged-in user (from memory, no API call)
+   */
+  getCurrentUser(): User | null {
+    return this.currentUser;
+  }
+
+  /**
+   * Checks if a user is currently logged in
+   */
+  isLoggedIn(): boolean {
+    return this.currentUser !== null;
   }
 
   /**
@@ -61,6 +88,7 @@ class AuthService {
       // We clear the token even if the request fails 
       // to ensure the client-side session is closed.
       api.setToken(null);
+      this.currentUser = null;
     }
   }
 

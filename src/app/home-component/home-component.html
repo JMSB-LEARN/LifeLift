@@ -1,9 +1,11 @@
 <section class="hero">
     <div class="hero-content">
-        <h1>Welcome to LifeLift</h1>
+        <h1 *ngIf="!isLoggedIn">Welcome to LifeLift</h1>
+        <h1 *ngIf="isLoggedIn">Welcome back, {{ currentUser?.username || currentUser?.first_name }}!</h1>
         <p>Empowering your journey with confidence and support.</p>
         <nav>
-            <a class="cta-button" routerLink="/signup">Get Started</a>
+            <a class="cta-button" routerLink="/signup" *ngIf="!isLoggedIn">Get Started</a>
+            <a class="cta-button" routerLink="/my-profile" *ngIf="isLoggedIn">My Profile</a>
         </nav>
     </div>
 </section>

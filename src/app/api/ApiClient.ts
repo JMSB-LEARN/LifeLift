@@ -97,5 +97,5 @@ private async refreshToken(): Promise<string | null> {
 }
 
 // Accessing the variable from environme
-const BASE_URL = 'https://life-lift-api.vercel.app';
+const BASE_URL = 'https://life-lift-api.vercel.app/api';
 export const api = new ApiClient(BASE_URL);
