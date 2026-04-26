@@ -22,7 +22,7 @@ nav {
     gap: var(--spacing-lg);
 }
 
-nav a {
+nav a, nav button {
     height: wrap-content;
     align-self: center;
     text-decoration: none;
@@ -30,9 +30,12 @@ nav a {
     font-weight: 600;
     font-size: var(--font-size-lg);
     transition: color 0.2s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-nav a:hover {
+nav a:hover, nav button:hover {
     color: var(--highlight-color);
 }
 

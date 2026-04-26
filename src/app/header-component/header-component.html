@@ -8,8 +8,13 @@
         <a routerLink="/unemployment">Desempleo</a>
         <a routerLink="/"><img src="/media/image1.png" alt=""></a>
     </nav>
-    <nav class="nav-links-right">
-        <a routerLink="/login">Log In</a>
-        <a routerLink="/signup">Sign Up</a>
+    <nav class="login-signup-right-nav">
+        <ng-container *ngIf="!isLoggedIn">
+            <a routerLink="/login">Log In</a>
+            <a routerLink="/signup">Sign Up</a>
+        </ng-container>
+        <ng-container *ngIf="isLoggedIn">
+            <button (click)="logout()">Log Out</button>
+        </ng-container>
     </nav>
 </div>

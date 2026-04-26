@@ -14,8 +14,11 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 class ApiClient {
   public client: AxiosInstance;
   private accessToken: string | null = null;
+  private readonly TOKEN_STORAGE_KEY = 'lifeLiftToken';
 
   constructor(baseURL: string) {
+    this.accessToken = this.loadToken();
+
     this.client = axios.create({
       baseURL,
       withCredentials: false,
@@ -26,6 +29,27 @@ class ApiClient {
 
   public setToken(token: string | null): void {
     this.accessToken = token;
+    this.saveToken(token);
+  }
+
+  private loadToken(): string | null {
+    try {
+      return localStorage.getItem(this.TOKEN_STORAGE_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  private saveToken(token: string | null): void {
+    try {
+      if (token) {
+        localStorage.setItem(this.TOKEN_STORAGE_KEY, token);
+      } else {
+        localStorage.removeItem(this.TOKEN_STORAGE_KEY);
+      }
+    } catch {
+      // ignore storage errors
+    }
   }
 
   private _setupInterceptors(): void {

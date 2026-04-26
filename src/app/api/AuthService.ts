@@ -37,6 +37,18 @@ interface RegisterPayload {
 
 class AuthService {
   private currentUser: User | null = null;
+  private readonly USER_STORAGE_KEY = 'lifeLiftUser';
+
+  constructor() {
+    const storedUser = localStorage.getItem(this.USER_STORAGE_KEY);
+    if (storedUser) {
+      try {
+        this.currentUser = JSON.parse(storedUser) as User;
+      } catch {
+        this.currentUser = null;
+      }
+    }
+  }
 
   /**
    * Authenticates the user and sets the access token in memory
@@ -53,6 +65,11 @@ class AuthService {
     // Store user info if provided in response
     if (data.user) {
       this.currentUser = data.user;
+      try {
+        localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(data.user));
+      } catch {
+        // ignore storage errors
+      }
     }
   }
 
@@ -89,6 +106,11 @@ class AuthService {
       // to ensure the client-side session is closed.
       api.setToken(null);
       this.currentUser = null;
+      try {
+        localStorage.removeItem(this.USER_STORAGE_KEY);
+      } catch {
+        // ignore storage errors
+      }
     }
   }
 
