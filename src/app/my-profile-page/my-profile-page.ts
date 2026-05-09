@@ -166,7 +166,7 @@ export class MyProfilePage implements OnInit {
           this.profile.housemates = hm.map((h: any) => ({
             id: h.id,
             name: h.full_name || '',
-            relation: h.relation || '',
+            relation: h.relation || 'Other',
             livesWith: h.lives_with !== false,
             dependent: !!h.is_dependent,
             income: h.income_annual ? Math.round(h.income_annual / 12) : 0,
@@ -222,7 +222,15 @@ export class MyProfilePage implements OnInit {
   }
 
   async saveProfile() {
-    if (this.currentPassword || this.newPassword || this.confirmPassword) {
+    if (this.newPassword || this.currentPassword || this.confirmPassword) {
+      if (!this.currentPassword) {
+        alert('Debes ingresar tu contraseña actual para cambiarla.');
+        return;
+      }
+      if (!this.newPassword) {
+        alert('Debes ingresar una nueva contraseña.');
+        return;
+      }
       if (this.newPassword !== this.confirmPassword) {
         alert('Las contraseñas nuevas no coinciden.');
         return;
@@ -244,13 +252,21 @@ export class MyProfilePage implements OnInit {
 
     this.updateTotalIncome();
     
+    const docNumber = (this.profile.idNumber || '').toUpperCase();
+    let docType = 'Passport';
+    if (/^[0-9]{8}[A-Z]$/.test(docNumber)) {
+      docType = 'DNI';
+    } else if (/^[XYZ][0-9]{7}[A-Z]$/.test(docNumber)) {
+      docType = 'NIE';
+    }
+
     const profilePayload = {
       first_name: this.profile.firstName,
       surname_1: this.profile.lastName,
       surname_2: this.profile.secondLastName || null,
       birth_date: this.profile.birthDate || null,
       document_number: this.profile.idNumber,
-      document_type: 'DNI', // The database constraint expects strictly 'DNI', 'NIE', or 'Passport'
+      document_type: docType,
       phone: this.profile.phone || null,
       address: this.profile.address || null,
       postal_code: this.profile.postalCode || null,
@@ -265,11 +281,11 @@ export class MyProfilePage implements OnInit {
       gross_annual_income: (this.profile.grossMonthlyIncome || 0) * 12,
       is_large_family: this.profile.largeFamily,
       has_disability: this.profile.disability,
-      disability_percentage: this.profile.disabilityPercentage,
+      disability_percentage: this.profile.disability ? (this.profile.disabilityPercentage || 0) : 0,
       is_single_parent: this.profile.singleParent,
       exclusion_risk: this.profile.socialExclusionRisk,
-      dependency_grade: this.profile.dependencyDegree,
-      number_of_children: this.profile.numberOfChildren
+      dependency_grade: this.profile.dependency ? (this.profile.dependencyDegree || 1) : 0,
+      number_of_children: this.profile.numberOfChildren || 0
     };
 
     try {
@@ -303,7 +319,7 @@ export class MyProfilePage implements OnInit {
       for (const hm of this.profile.housemates) {
         const hmPayload = {
           full_name: hm.name,
-          relation: hm.relation,
+          relation: hm.relation || 'Other',
           lives_with: hm.livesWith,
           is_dependent: hm.dependent,
           income_annual: (hm.income || 0) * 12,
@@ -329,7 +345,7 @@ export class MyProfilePage implements OnInit {
   addHousemate() {
     this.profile.housemates.push({
       name: '',
-      relation: '',
+      relation: 'Other',
       livesWith: true,
       dependent: false,
       directRelative: false,
@@ -350,5 +366,17 @@ export class MyProfilePage implements OnInit {
 
   yesNo(value: boolean) {
     return value ? 'Sí' : 'No';
+  }
+
+  getRelationLabel(rel: string): string {
+    const map: Record<string, string> = {
+      Parent: 'Padre / Madre',
+      Child: 'Hijo/a',
+      Sibling: 'Hermano/a',
+      Partner: 'Pareja',
+      Grandparent: 'Abuelo/a',
+      Other: 'Otro'
+    };
+    return map[rel] || rel;
   }
 }

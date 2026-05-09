@@ -1,17 +1,8 @@
 import { api } from './ApiClient';
+import { User, DocumentTypeEnum } from './models';
 
-// Define the shape of your User object
-export interface User {
-  id: string;
-  email: string;
-  username?: string;
-  first_name?: string;
-  surname?: string;
-  second_surname?: string;
-  name?: string;
-  created_at?: string;
-  // Add other user fields here
-}
+// Re-export User so existing imports in components don't break
+export type { User };
 
 // Define the expected response from the login endpoint
 interface LoginResponse {
@@ -22,7 +13,7 @@ interface LoginResponse {
 // Define the expected response from the register endpoint
 interface RegisterResponse {
   message: string;
-  user: User & { created_at?: string };
+  user: User;
 }
 
 // Define the registration payload
@@ -34,7 +25,7 @@ interface RegisterPayload {
   surname_1: string;
   surname_2?: string | null;
   document_number: string;
-  document_type?: string;
+  document_type?: DocumentTypeEnum;
   birth_date: string;
 }
 
@@ -57,14 +48,14 @@ class AuthService {
    * Authenticates the user and sets the access token in memory
    */
   async login(username: string, password: string): Promise<void> {
-    const { data } = await api.client.post<LoginResponse>('/login', { 
-      username, 
-      password 
+    const { data } = await api.client.post<LoginResponse>('/login', {
+      username,
+      password
     });
 
     // Store the token in the ApiClient instance memory
     api.setToken(data.token);
-    
+
     // Store user info if provided in response
     if (data.user) {
       this.currentUser = data.user;
@@ -120,8 +111,8 @@ class AuthService {
   /**
    * Retrieves the current user's profile
    */
-  async getProfile(): Promise<User> {
-    const { data } = await api.client.get<User>('/me');
+  async getProfile(): Promise<any> {
+    const { data } = await api.client.get<any>('/profile');
     return data;
   }
 

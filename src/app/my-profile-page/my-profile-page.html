@@ -107,7 +107,7 @@
                         <tbody>
                             <tr *ngFor="let member of profile.housemates">
                                 <td>{{ member.name }}</td>
-                                <td>{{ member.relation }}</td>
+                                <td>{{ getRelationLabel(member.relation) }}</td>
                                 <td>{{ member.income | currency:'EUR' }}</td>
                                 <td>{{ yesNo(member.dependent) }}</td>
                             </tr>
@@ -247,11 +247,18 @@
                             Víctima Violencia Género</label>
                         <label><input type="checkbox" [(ngModel)]="profile.socialExclusionRisk"
                                 name="socialExclusionRisk" /> Riesgo Exclusión Social</label>
+                        <label><input type="checkbox" [(ngModel)]="profile.dependency" name="dependency" /> Dependencia</label>
                     </div>
                     <div *ngIf="profile.disability" class="form-group mt-10">
                         <label>Grado de discapacidad (%)
                             <input type="number" [(ngModel)]="profile.disabilityPercentage" name="disabilityPercentage"
                                 min="0" max="100" />
+                        </label>
+                    </div>
+                    <div *ngIf="profile.dependency" class="form-group mt-10">
+                        <label>Grado de dependencia (1, 2 o 3)
+                            <input type="number" [(ngModel)]="profile.dependencyDegree" name="dependencyDegree"
+                                min="1" max="3" />
                         </label>
                     </div>
                 </section>
@@ -261,6 +268,12 @@
                     <div class="household-header">
                         <h2>Unidad de Convivencia</h2>
                         <button type="button" class="btn-add" (click)="addHousemate()">+ Añadir Persona</button>
+                    </div>
+
+                    <div class="grid-2 edit-grid" style="margin-bottom: 1.5rem;">
+                        <label>Hijos a cargo
+                            <input type="number" [(ngModel)]="profile.numberOfChildren" name="numberOfChildren" min="0" />
+                        </label>
                     </div>
 
                     <div class="table-responsive">
@@ -276,7 +289,16 @@
                             <tbody>
                                 <tr *ngFor="let member of profile.housemates; let i = index">
                                     <td><input type="text" [(ngModel)]="member.name" [name]="'hmName' + i" /></td>
-                                    <td><input type="text" [(ngModel)]="member.relation" [name]="'hmRel' + i" /></td>
+                                    <td>
+                                        <select [(ngModel)]="member.relation" [name]="'hmRel' + i">
+                                            <option value="Parent">Padre / Madre</option>
+                                            <option value="Child">Hijo/a</option>
+                                            <option value="Sibling">Hermano/a</option>
+                                            <option value="Partner">Pareja</option>
+                                            <option value="Grandparent">Abuelo/a</option>
+                                            <option value="Other">Otro</option>
+                                        </select>
+                                    </td>
                                     <td><input type="number" [(ngModel)]="member.income" [name]="'hmInc' + i"
                                             (ngModelChange)="updateTotalIncome()" /></td>
                                     <td><button type="button" class="btn-delete"
@@ -298,13 +320,13 @@
                     <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: var(--font-size-sm);">Déjalo en blanco si no deseas cambiar tu contraseña actual.</p>
                     <div class="grid-3 edit-grid">
                         <label>Contraseña Actual
-                            <input type="password" [(ngModel)]="currentPassword" name="currentPassword" placeholder="••••••••" />
+                            <input type="password" [(ngModel)]="currentPassword" name="currentPassword" placeholder="••••••••" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" />
                         </label>
                         <label>Nueva Contraseña
-                            <input type="password" [(ngModel)]="newPassword" name="newPassword" placeholder="••••••••" />
+                            <input type="password" [(ngModel)]="newPassword" name="newPassword" placeholder="••••••••" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" />
                         </label>
                         <label>Confirmar Nueva Contraseña
-                            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="••••••••" />
+                            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="••••••••" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" />
                         </label>
                     </div>
                 </section>

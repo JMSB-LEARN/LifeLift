@@ -1,8 +1,8 @@
-import axios, { 
-  AxiosInstance, 
-  AxiosError, 
-  InternalAxiosRequestConfig, 
-  AxiosResponse 
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse
 } from 'axios';
 
 
@@ -75,7 +75,7 @@ class ApiClient {
           originalRequest._retry = true;
 
           const newToken = await this.refreshToken();
-          
+
           if (newToken) {
             // Update the header with the fresh token
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -89,35 +89,35 @@ class ApiClient {
     );
   }
 
-private refreshPromise: Promise<string | null> | null = null;
+  private refreshPromise: Promise<string | null> | null = null;
 
-private async refreshToken(): Promise<string | null> {
-  if (this.refreshPromise) return this.refreshPromise;
+  private async refreshToken(): Promise<string | null> {
+    if (this.refreshPromise) return this.refreshPromise;
 
-  this.refreshPromise = (async () => {
-    try {
-      const response = await axios.post<{ accessToken: string }>(
-        '/auth/refresh',
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+    this.refreshPromise = (async () => {
+      try {
+        const response = await axios.post<{ accessToken: string }>(
+          '/auth/refresh',
+          {},
+          {
+            withCredentials: true,
+          }
+        );
 
-      const newToken = response.data.accessToken;
+        const newToken = response.data.accessToken;
 
-      this.setToken(newToken);
-      return newToken;
-    } catch (err) {
-      this.setToken(null);
-      return null;
-    } finally {
-      this.refreshPromise = null;
-    }
-  })();
+        this.setToken(newToken);
+        return newToken;
+      } catch (err) {
+        this.setToken(null);
+        return null;
+      } finally {
+        this.refreshPromise = null;
+      }
+    })();
 
-  return this.refreshPromise;
-}
+    return this.refreshPromise;
+  }
 }
 
 // Accessing the variable from environme
