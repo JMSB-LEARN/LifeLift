@@ -31,8 +31,11 @@ interface RegisterPayload {
   email: string;
   password: string;
   first_name: string;
-  surname: string;
-  second_surname?: string | null;
+  surname_1: string;
+  surname_2?: string | null;
+  document_number: string;
+  document_type?: string;
+  birth_date: string;
 }
 
 class AuthService {
@@ -120,6 +123,16 @@ class AuthService {
   async getProfile(): Promise<User> {
     const { data } = await api.client.get<User>('/me');
     return data;
+  }
+
+  /**
+   * Changes the current user's password
+   */
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await api.client.put('/change-password', {
+      currentPassword,
+      newPassword
+    });
   }
 }
 
