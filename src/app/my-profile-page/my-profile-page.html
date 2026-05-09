@@ -1,4 +1,285 @@
 <div class="hero">
-    <h1>Mi Perfil</h1>
-    <p>Consulta y actualiza la información de tu perfil.</p>
+    <div class="profile-page">
+        <div class="profile-header">
+            <h1></h1>
+            <div>
+                <h1>Mi Perfil</h1>
+                <p>Consulta y actualiza tu información personal para trámites en España.</p>
+            </div>
+            <div class="profile-actions">
+                <button type="button" class="toggle-button" (click)="toggleEditMode()" *ngIf="!editMode">Editar</button>
+                <button type="button" class="toggle-button" (click)="saveProfile()" *ngIf="editMode">Guardar</button>
+                <button type="button" class="cancel-button" (click)="toggleEditMode()"
+                    *ngIf="editMode">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- MODO VISTA (Solo lectura) -->
+        <ng-container *ngIf="!editMode; else editForm">
+            <section class="profile-section">
+                <h2>Datos personales</h2>
+                <div class="grid-3 view-grid">
+                    <div class="basic-data-row">
+                        <div><strong>Usuario</strong><span>{{ profile.username || '—' }}</span></div>
+                        <div class="email-status-row">
+                            <strong>Email</strong>
+                            <span class="email-value">
+                                {{ profile.email || '—' }}
+                                <span class="email-status" [class.verified]="profile.emailVerified"
+                                    [class.unverified]="!profile.emailVerified"
+                                    title="{{ profile.emailVerified ? 'Email verificado' : 'Email no verificado' }}">
+                                    {{ profile.emailVerified ? '✔' : '¿' }}
+                                </span>
+                            </span>
+                        </div>
+                        <div><strong>Teléfono</strong><span>{{ profile.phone || '—' }}</span></div>
+                    </div>
+                </div>
+
+                <div class="grid-3 view-grid">
+                    <div><strong>Nombre</strong><span>{{ profile.firstName || '—' }}</span></div>
+                    <div><strong>Primer Apellido</strong><span>{{ profile.lastName || '—' }}</span></div>
+                    <div><strong>Segundo Apellido</strong><span>{{ profile.secondLastName || '—' }}</span></div>
+                </div>
+
+                <div class="grid-3 view-grid">
+                    <div><strong>DNI / NIE</strong><span>{{ profile.idNumber || '—' }}</span></div>
+                    <div>
+                        <strong>Fecha de Nacimiento</strong>
+                        <span>{{ profile.birthDate ? (profile.birthDate | date:'dd/MM/yyyy') : '—' }}</span>
+                    </div>
+                    <div><strong>Edad</strong><span>{{ age ? age + ' años' : '—' }}</span></div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h2>Localización</h2>
+                <div class="grid-2 view-grid">
+                    <div><strong>Dirección</strong><span>{{ profile.address || '—' }}</span></div>
+                    <div><strong>Código Postal</strong><span>{{ profile.postalCode || '—' }}</span></div>
+                    <div><strong>Provincia</strong><span>{{ profile.province || '—' }}</span></div>
+                    <div><strong>Comunidad Autónoma</strong><span>{{ profile.region || '—' }}</span></div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h2>Situación Socioeconómica</h2>
+                <div class="grid-2 view-grid">
+                    <div><strong>Nivel de estudios</strong><span>{{ profile.educationLevel || '—' }}</span></div>
+                    <div><strong>Estado laboral</strong><span>{{ profile.employmentStatus || '—' }}</span></div>
+                    <div><strong>Ingresos brutos mensuales</strong><span>{{ profile.grossMonthlyIncome | currency:'EUR'
+                            }}</span></div>
+                    <div><strong>Prestaciones públicas</strong><span>{{ profile.receivesBenefit ? profile.benefitType :
+                            'Ninguna' }}</span></div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h2>Circunstancias Especiales</h2>
+                <div class="grid-3 view-grid">
+                    <div><strong>Discapacidad</strong><span>{{ profile.disability ? profile.disabilityPercentage + '%' :
+                            'No' }}</span></div>
+                    <div><strong>Familia Numerosa</strong><span>{{ yesNo(profile.largeFamily) }}</span></div>
+                    <div><strong>Familia Monoparental</strong><span>{{ yesNo(profile.singleParent) }}</span></div>
+                    <div><strong>Víctima Violencia Género</strong><span>{{ yesNo(profile.genderViolence) }}</span></div>
+                    <div><strong>Exclusión Social</strong><span>{{ yesNo(profile.socialExclusionRisk) }}</span></div>
+                    <div><strong>Dependencia</strong><span>{{ yesNo(profile.dependency) }}</span></div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h2>Unidad de Convivencia</h2>
+                <div class="grid-2 view-grid mb-15">
+                    <div><strong>Hijos a cargo</strong><span>{{ profile.numberOfChildren }}</span></div>
+                    <div><strong>Total miembros hogar</strong><span>{{ profile.householdSize }}</span></div>
+                </div>
+
+                <div *ngIf="profile.livesWithOthers && profile.housemates.length > 0" class="table-responsive">
+                    <table class="household-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Parentesco</th>
+                                <th>Ingresos</th>
+                                <th>Dependiente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let member of profile.housemates">
+                                <td>{{ member.name }}</td>
+                                <td>{{ member.relation }}</td>
+                                <td>{{ member.income | currency:'EUR' }}</td>
+                                <td>{{ yesNo(member.dependent) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="profile-section summary-section">
+                <h2>Resumen Económico Familiar</h2>
+                <p>Ingresos totales computables de la unidad de convivencia:</p>
+                <div class="summary-value">{{ profile.totalHouseholdIncome | currency:'EUR' }}</div>
+            </section>
+        </ng-container>
+
+        <!-- MODO EDICIÓN -->
+        <ng-template #editForm>
+            <form class="profile-form" (ngSubmit)="saveProfile()">
+
+                <!-- SECCIÓN: DATOS BÁSICOS -->
+                <section class="profile-section">
+                    <h2>Datos personales</h2>
+                    <div class="grid-3 edit-grid">
+                        <label>Nombre
+                            <input type="text" [(ngModel)]="profile.firstName" name="firstName" placeholder="Nombre"
+                                required />
+                        </label>
+                        <label>Primer apellido
+                            <input type="text" [(ngModel)]="profile.lastName" name="lastName"
+                                placeholder="Primer apellido" required />
+                        </label>
+                        <label>Segundo apellido
+                            <input type="text" [(ngModel)]="profile.secondLastName" name="secondLastName"
+                                placeholder="Segundo apellido" />
+                        </label>
+                    </div>
+
+                    <div class="grid-3 edit-grid">
+                        <label>DNI / NIE
+                            <input type="text" [(ngModel)]="profile.idNumber" name="idNumber" placeholder="12345678X" />
+                        </label>
+                        <label>Fecha de nacimiento
+                            <input type="date" [(ngModel)]="profile.birthDate" name="birthDate" />
+                        </label>
+                        <label>Teléfono
+                            <input type="tel" [(ngModel)]="profile.phone" name="phone" placeholder="600 000 000" />
+                        </label>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: LOCALIZACIÓN (ESPAÑA) -->
+                <section class="profile-section">
+                    <h2>Dirección en España</h2>
+                    <div class="grid-2 edit-grid">
+                        <label>Calle, número y piso
+                            <input type="text" [(ngModel)]="profile.address" name="address" />
+                        </label>
+                        <label>Código Postal
+                            <input type="text" [(ngModel)]="profile.postalCode" name="postalCode" maxlength="5" />
+                        </label>
+                    </div>
+                    <div class="grid-2 edit-grid">
+                        <label>Provincia
+                            <select [(ngModel)]="profile.province" name="province"
+                                (ngModelChange)="onProvinceChange($event)">
+                                <option *ngFor="let p of provinciasLista" [value]="p">{{p}}</option>
+                            </select>
+                        </label>
+                        <label>Comunidad Autónoma
+                            <input type="text" [(ngModel)]="profile.region" name="region" readonly
+                                class="readonly-input" />
+                        </label>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: ECONOMÍA Y TRABAJO -->
+                <section class="profile-section">
+                    <h2>Situación Económica</h2>
+                    <div class="grid-2 edit-grid">
+                        <label>Nivel de estudios
+                            <select [(ngModel)]="profile.educationLevel" name="educationLevel">
+                                <option *ngFor="let nivel of nivelesEstudio" [value]="nivel">{{nivel}}</option>
+                            </select>
+                        </label>
+                        <label>Situación laboral
+                            <select [(ngModel)]="profile.employmentStatus" name="employmentStatus">
+                                <option *ngFor="let sit of situacionesLaborales" [value]="sit">{{sit}}</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="grid-2 edit-grid">
+                        <label>Ingresos brutos mensuales (€)
+                            <input type="number" [(ngModel)]="profile.grossMonthlyIncome" name="grossMonthlyIncome"
+                                (ngModelChange)="updateTotalIncome()" />
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" [(ngModel)]="profile.receivesBenefit" name="receivesBenefit" />
+                            ¿Recibe alguna prestación (Paro, IMV, Ayudas)?
+                        </label>
+                    </div>
+                    <div *ngIf="profile.receivesBenefit" class="form-group">
+                        <label>Tipo de prestación / Ayuda
+                            <input type="text" [(ngModel)]="profile.benefitType" name="benefitType"
+                                placeholder="Ej: Ingreso Mínimo Vital" />
+                        </label>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: CIRCUNSTANCIAS ESPECIALES -->
+                <section class="profile-section">
+                    <h2>Circunstancias Especiales</h2>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox" [(ngModel)]="profile.disability" name="disability" /> Discapacidad
+                            reconocida</label>
+                        <label><input type="checkbox" [(ngModel)]="profile.largeFamily" name="largeFamily" /> Familia
+                            Numerosa</label>
+                        <label><input type="checkbox" [(ngModel)]="profile.singleParent" name="singleParent" /> Familia
+                            Monoparental</label>
+                        <label><input type="checkbox" [(ngModel)]="profile.genderViolence" name="genderViolence" />
+                            Víctima Violencia Género</label>
+                        <label><input type="checkbox" [(ngModel)]="profile.socialExclusionRisk"
+                                name="socialExclusionRisk" /> Riesgo Exclusión Social</label>
+                    </div>
+                    <div *ngIf="profile.disability" class="form-group mt-10">
+                        <label>Grado de discapacidad (%)
+                            <input type="number" [(ngModel)]="profile.disabilityPercentage" name="disabilityPercentage"
+                                min="0" max="100" />
+                        </label>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: UNIDAD FAMILIAR -->
+                <section class="profile-section">
+                    <div class="household-header">
+                        <h2>Unidad de Convivencia</h2>
+                        <button type="button" class="btn-add" (click)="addHousemate()">+ Añadir Persona</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="household-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre completo</th>
+                                    <th>Parentesco</th>
+                                    <th>Ingresos (€)</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let member of profile.housemates; let i = index">
+                                    <td><input type="text" [(ngModel)]="member.name" [name]="'hmName' + i" /></td>
+                                    <td><input type="text" [(ngModel)]="member.relation" [name]="'hmRel' + i" /></td>
+                                    <td><input type="number" [(ngModel)]="member.income" [name]="'hmInc' + i"
+                                            (ngModelChange)="updateTotalIncome()" /></td>
+                                    <td><button type="button" class="btn-delete"
+                                            (click)="removeHousemate(i)">Eliminar</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="total-banner">
+                        <strong>Total Ingresos Unidad Familiar:</strong>
+                        <span>{{ profile.totalHouseholdIncome | currency:'EUR' }}</span>
+                    </div>
+                </section>
+
+                <div class="form-footer">
+                    <button type="submit" class="save-button-large">Guardar Perfil</button>
+                </div>
+            </form>
+        </ng-template>
+
+    </div>
 </div>
