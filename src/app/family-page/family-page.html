@@ -1,4 +1,44 @@
-<div class="hero">
-    <h1>Familia</h1>
-    <p>Descubre cómo puedes apoyar a tu familia y acceder a recursos importantes.</p>
+<div class="page-hero">
+    <h1>Familia y Convivencia</h1>
+    <p>La importancia del núcleo familiar y las ayudas disponibles para ti.</p>
+
+    <div class="page-container" style="margin-top: 2rem;">
+        <section class="page-section" style="text-align: left;">
+            <h2>La estabilidad social comienza en casa</h2>
+            <p>Las personas con las que convivimos forman nuestra principal red de apoyo. La estabilidad en la unidad doméstica es clave para el bienestar emocional y económico. El cuidado de los hijos, la atención a personas dependientes y el apoyo mutuo son pilares fundamentales que, a menudo, requieren ayuda externa para sostenerse.</p>
+            <p>Las instituciones ofrecen diversas ayudas para proteger a las familias, especialmente a las monoparentales y numerosas, o aquellas que enfrentan dificultades económicas conjuntas.</p>
+
+            <div class="data-box" *ngIf="!loading && profile">
+                <h3>Tu Unidad Doméstica</h3>
+                <div class="data-grid">
+                    <div>
+                        <strong>Miembros convivientes:</strong>
+                        <span>{{ householdSize }}</span>
+                    </div>
+                    <div>
+                        <strong>Hijos a cargo:</strong>
+                        <span>{{ socioEconomic?.number_of_children || 0 }}</span>
+                    </div>
+                    <div>
+                        <strong>Familia Numerosa:</strong>
+                        <span>{{ socioEconomic?.is_large_family ? 'Sí' : 'No' }}</span>
+                    </div>
+                    <div>
+                        <strong>Familia Monoparental:</strong>
+                        <span>{{ socioEconomic?.is_single_parent ? 'Sí' : 'No' }}</span>
+                    </div>
+                    <div>
+                        <strong>Ingresos Anuales Totales:</strong>
+                        <span>{{ totalIncome | currency:'EUR' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-box">
+                <h3>¿Buscas ayudas para tu familia?</h3>
+                <p>Hemos recopilado subsidios y prestaciones pensadas para proteger a la unidad familiar.</p>
+                <a [routerLink]="['/subsides']" [queryParams]="{ filter: 'family' }" class="btn-primary-large">Ver ayudas familiares</a>
+            </div>
+        </section>
+    </div>
 </div>

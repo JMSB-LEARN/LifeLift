@@ -8,6 +8,7 @@
     padding: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
     margin-top: auto;
     border-top: 4px solid var(--secondary-color);
+    z-index: 100;
 }
 
 a {

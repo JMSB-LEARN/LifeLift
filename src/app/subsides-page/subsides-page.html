@@ -1,4 +1,68 @@
-<div class="hero">
+<div class="page-hero">
     <h1>Subsidios</h1>
     <p>Descubre los subsidios disponibles para ti y tu familia.</p>
+
+    <div class="page-container" style="margin-top: 2rem;">
+        <div class="page-section filters-panel" style="text-align: left;">
+            <label class="checkbox-container" style="font-weight: bold; margin-bottom: 10px;">
+                <input type="checkbox" [(ngModel)]="showOnlyQualified" name="showOnlyQualified" />
+                Ver ayudas a las que califico
+            </label>
+
+            <label class="checkbox-container" style="margin-bottom: 20px;">
+                <input type="checkbox" [(ngModel)]="hideApplied" name="hideApplied" />
+                Ocultar ayudas a las que ya he aplicado
+            </label>
+
+            <div *ngIf="!showOnlyQualified" class="manual-filters">
+                <h3 style="margin-bottom: 10px; font-size: 1rem;">Filtros manuales:</h3>
+                <div class="checkbox-grid">
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterUnemployment" /> Desempleo</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterFamily" /> Familia Numerosa / Monoparental</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterDisability" /> Discapacidad</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterExclusion" /> Exclusión Social</label>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="loading" class="loading-state" style="text-align: left;">Cargando ayudas...</div>
+
+        <div *ngIf="!loading && filteredGrants.length === 0" class="empty-state" style="text-align: left;">
+            No se encontraron ayudas con los filtros actuales.
+        </div>
+
+        <div class="grants-list" *ngIf="!loading" style="text-align: left;">
+            <div class="grant-card" *ngFor="let grant of filteredGrants" [class.expanded]="expandedGrantId === grant.id">
+                <div class="grant-header" (click)="toggleExpand(grant.id)">
+                    <div class="grant-title-group">
+                        <span class="status-badge" *ngIf="isApplied(grant.id)">Aplicada</span>
+                        <h3>{{ grant.title }}</h3>
+                    </div>
+                    <button class="expand-btn">{{ expandedGrantId === grant.id ? '▲' : '▼' }}</button>
+                </div>
+
+                <div class="grant-details" *ngIf="expandedGrantId === grant.id">
+                    <p class="grant-desc">{{ grant.description }}</p>
+                    <div class="grant-meta">
+                        <span *ngIf="grant.min_amount"><strong>Importe:</strong> Desde {{ grant.min_amount | currency:'EUR' }} hasta {{ grant.max_amount | currency:'EUR' }}</span>
+                        <span><strong>Ámbito:</strong> {{ grant.scope }}</span>
+                        <span *ngIf="grant.closing_date"><strong>Cierre:</strong> {{ grant.closing_date | date:'shortDate' }}</span>
+                    </div>
+
+                    <div class="grant-actions">
+                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary">Más información</a>
+
+                        <button *ngIf="!isApplied(grant.id)" class="btn-primary" (click)="markAsApplied(grant.id)">
+                            Marcar como Aplicada
+                        </button>
+
+                        <div *ngIf="isApplied(grant.id)" class="upload-section">
+                            <label>Adjuntar documentación (PDF, max 15MB):</label>
+                            <input type="file" accept="application/pdf" (change)="onFileSelected($event, grant.id)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

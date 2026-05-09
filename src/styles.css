@@ -75,3 +75,53 @@ button {
     margin: 0 auto;
     padding: 0 var(--spacing-md);
 }
+
+.page-hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--surface-color);
+    padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-2xl);
+    text-align: center;
+    padding-top: 6vh;
+    min-height: 88vh;
+}
+.page-hero h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-sm);
+}
+.page-hero p {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+}
+
+.page-container {
+    max-width: var(--windows-max-width);
+    margin: -5rem auto 0;
+    padding: 0 var(--spacing-md) 8rem;
+    color: var(--text-main);
+    position: relative;
+    z-index: 10;
+}
+
+.page-section {
+    background: var(--surface-color);
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    padding: var(--spacing-xl);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: var(--spacing-2xl);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.page-section:hover {
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+}
+
+.page-section h2 {
+    margin: 0 0 var(--spacing-lg);
+    color: var(--primary-color);
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    border-bottom: 2px solid var(--background-color);
+    padding-bottom: var(--spacing-sm);
+}
