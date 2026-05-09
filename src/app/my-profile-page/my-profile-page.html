@@ -118,8 +118,25 @@
 
             <section class="profile-section summary-section">
                 <h2>Resumen Económico Familiar</h2>
-                <p>Ingresos totales computables de la unidad de convivencia:</p>
-                <div class="summary-value">{{ profile.totalHouseholdIncome | currency:'EUR' }}</div>
+                <p>Desglose de los ingresos totales computables de la unidad de convivencia:</p>
+                
+                <div class="income-breakdown">
+                    <div class="income-item">
+                        <span>Ingresos Propios ({{ profile.firstName || 'Usuario' }})</span>
+                        <span>{{ profile.grossMonthlyIncome | currency:'EUR' }}</span>
+                    </div>
+                    <ng-container *ngIf="profile.housemates.length > 0">
+                        <div class="income-item" *ngFor="let member of profile.housemates">
+                            <span>Ingresos de {{ member.name || 'Familiar' }} ({{ member.relation || 'Sin especificar' }})</span>
+                            <span>{{ member.income | currency:'EUR' }}</span>
+                        </div>
+                    </ng-container>
+                    <hr class="summary-divider">
+                    <div class="income-total">
+                        <strong>Ingresos Totales Familiares</strong>
+                        <strong class="summary-value" style="padding: 0.5rem 1.2rem; border-radius: 12px; font-size: 1.5rem;">{{ profile.totalHouseholdIncome | currency:'EUR' }}</strong>
+                    </div>
+                </div>
             </section>
         </ng-container>
 
@@ -272,6 +289,23 @@
                     <div class="total-banner">
                         <strong>Total Ingresos Unidad Familiar:</strong>
                         <span>{{ profile.totalHouseholdIncome | currency:'EUR' }}</span>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: CAMBIAR CONTRASEÑA -->
+                <section class="profile-section">
+                    <h2>Cambiar Contraseña</h2>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: var(--font-size-sm);">Déjalo en blanco si no deseas cambiar tu contraseña actual.</p>
+                    <div class="grid-3 edit-grid">
+                        <label>Contraseña Actual
+                            <input type="password" [(ngModel)]="currentPassword" name="currentPassword" placeholder="••••••••" />
+                        </label>
+                        <label>Nueva Contraseña
+                            <input type="password" [(ngModel)]="newPassword" name="newPassword" placeholder="••••••••" />
+                        </label>
+                        <label>Confirmar Nueva Contraseña
+                            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="••••••••" />
+                        </label>
                     </div>
                 </section>
 

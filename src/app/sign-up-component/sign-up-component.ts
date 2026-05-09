@@ -47,6 +47,14 @@ export class SignUpComponent {
     return this.signUpForm.get('secondSurname');
   }
 
+  get documentNumber(): AbstractControl | null {
+    return this.signUpForm.get('documentNumber');
+  }
+
+  get birthDate(): AbstractControl | null {
+    return this.signUpForm.get('birthDate');
+  }
+
   constructor() {
     this.signUpForm = this.fb.group(
       {
@@ -57,6 +65,8 @@ export class SignUpComponent {
         firstName: ['', Validators.required],
         surname: ['', Validators.required],
         secondSurname: [''],
+        documentNumber: ['', Validators.required],
+        birthDate: ['', Validators.required],
       },
       { validators: this.passwordMatchValidator }
     );
@@ -85,15 +95,18 @@ export class SignUpComponent {
     this.isLoading = true;
 
     try {
-      const { username, email, password, firstName, surname, secondSurname } = this.signUpForm.value;
+      const { username, email, password, firstName, surname, secondSurname, documentNumber, birthDate } = this.signUpForm.value;
 
       await AuthService.register({
         username,
         email,
         password,
         first_name: firstName,
-        surname,
-        second_surname: secondSurname || null,
+        surname_1: surname,
+        surname_2: secondSurname || null,
+        document_number: documentNumber,
+        document_type: 'DNI',
+        birth_date: birthDate
       });
 
       this.successMessage = 'Account created successfully! Redirecting to login...';

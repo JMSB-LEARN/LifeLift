@@ -1,18 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { api } from '../api/ApiClient';
+import AuthService from '../api/AuthService';
 
 @Component({
   selector: 'app-my-profile-page',
-  standalone: true, // Asegúrate de marcarlo como standalone si usas Angular 17+
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './my-profile-page.html',
   styleUrl: './my-profile-page.css',
 })
-export class MyProfilePage {
+export class MyProfilePage implements OnInit {
   editMode = false;
+  hasProfile = false;
+  hasSocioEconomic = false;
+  deletedHousemateIds: number[] = [];
 
-  // Listados para selectores españoles
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
+
   readonly comunidadesProvincias: { [key: string]: string[] } = {
     'Andalucía': ['Almería', 'Cádiz', 'Córdoba', 'Granada', 'Huelva', 'Jaén', 'Málaga', 'Sevilla'],
     'Aragón': ['Huesca', 'Teruel', 'Zaragoza'],
@@ -83,24 +91,103 @@ export class MyProfilePage {
     personsDependent: false,
     householdSize: 1,
     livesWithOthers: false,
-    housemates: [
-      {
-        name: '',
-        relation: '',
-        livesWith: true,
-        dependent: false,
-        directRelative: false,
-        income: 0,
-        disability: false,
-        age: '',
-      },
-    ],
+    housemates: [] as {
+      id?: number;
+      name: string;
+      relation: string;
+      livesWith: boolean;
+      dependent: boolean;
+      directRelative: boolean;
+      income: number;
+      disability: boolean;
+      age: string;
+      birthDate?: string;
+    }[],
     totalHouseholdIncome: 0,
   };
 
   constructor() {
-    // Inicializar lista completa de provincias
     this.provinciasLista = Object.values(this.comunidadesProvincias).flat().sort();
+  }
+
+  async ngOnInit() {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      this.profile.username = user.username || '';
+      this.profile.email = user.email || '';
+    }
+    await this.loadProfileData();
+  }
+
+  async loadProfileData() {
+    try {
+      try {
+        const profRes = await api.client.get('/profile');
+        const p = profRes.data;
+        this.hasProfile = true;
+        this.profile.firstName = p.first_name || '';
+        this.profile.lastName = p.surname_1 || '';
+        this.profile.secondLastName = p.surname_2 || '';
+        this.profile.birthDate = p.birth_date ? p.birth_date.split('T')[0] : '';
+        this.profile.idNumber = p.document_number || '';
+        this.profile.phone = p.phone || '';
+        this.profile.address = p.address || '';
+        this.profile.postalCode = p.postal_code || '';
+        this.profile.province = p.province || '';
+        this.profile.region = p.autonomous_community || '';
+        this.profile.genderViolence = !!p.is_gender_violence_victim;
+      } catch (e) {
+        this.hasProfile = false;
+      }
+
+      try {
+        const socRes = await api.client.get('/socio-economic');
+        const s = socRes.data;
+        this.hasSocioEconomic = true;
+        this.profile.educationLevel = s.education_level || '';
+        this.profile.employmentStatus = s.employment_status || '';
+        this.profile.grossMonthlyIncome = s.gross_annual_income ? Math.round(s.gross_annual_income / 12) : 0;
+        this.profile.largeFamily = !!s.is_large_family;
+        this.profile.disability = !!s.has_disability;
+        this.profile.disabilityPercentage = s.disability_percentage || null;
+        this.profile.singleParent = !!s.is_single_parent;
+        this.profile.socialExclusionRisk = !!s.exclusion_risk;
+        this.profile.dependencyDegree = s.dependency_grade || null;
+        this.profile.dependency = !!s.dependency_grade && s.dependency_grade > 0;
+        this.profile.numberOfChildren = s.number_of_children || 0;
+      } catch (e) {
+        this.hasSocioEconomic = false;
+      }
+
+      try {
+        const hmRes = await api.client.get('/housemates');
+        const hm = hmRes.data;
+        if (hm && hm.length > 0) {
+          this.profile.housemates = hm.map((h: any) => ({
+            id: h.id,
+            name: h.full_name || '',
+            relation: h.relation || '',
+            livesWith: h.lives_with !== false,
+            dependent: !!h.is_dependent,
+            income: h.income_annual ? Math.round(h.income_annual / 12) : 0,
+            birthDate: h.birth_date ? h.birth_date.split('T')[0] : '',
+            directRelative: false,
+            disability: false,
+            age: ''
+          }));
+          this.profile.livesWithOthers = true;
+        } else {
+          this.profile.housemates = [];
+        }
+      } catch (e) {
+        console.error('Error fetching housemates', e);
+      }
+      
+      this.profile.householdSize = this.profile.housemates.length + 1;
+      this.updateTotalIncome();
+    } catch (err) {
+      console.error('Error loading complete profile data:', err);
+    }
   }
 
   // Lógica para asignar Región automáticamente al cambiar Provincia
@@ -134,10 +221,109 @@ export class MyProfilePage {
     this.profile.totalHouseholdIncome = Number(this.profile.grossMonthlyIncome || 0) + housematesIncome;
   }
 
-  saveProfile() {
+  async saveProfile() {
+    if (this.currentPassword || this.newPassword || this.confirmPassword) {
+      if (this.newPassword !== this.confirmPassword) {
+        alert('Las contraseñas nuevas no coinciden.');
+        return;
+      }
+      try {
+        await api.client.put('/change-password', {
+          currentPassword: this.currentPassword,
+          newPassword: this.newPassword
+        });
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+      } catch (err: any) {
+        console.error('Error changing password', err);
+        alert(err.response?.data?.message || 'Error al cambiar la contraseña. Verifica tu contraseña actual.');
+        return; // Stop profile saving if password fails
+      }
+    }
+
     this.updateTotalIncome();
-    this.editMode = false;
-    // Aquí iría la lógica de persistencia (API)
+    
+    const profilePayload = {
+      first_name: this.profile.firstName,
+      surname_1: this.profile.lastName,
+      surname_2: this.profile.secondLastName || null,
+      birth_date: this.profile.birthDate || null,
+      document_number: this.profile.idNumber,
+      document_type: 'DNI', // The database constraint expects strictly 'DNI', 'NIE', or 'Passport'
+      phone: this.profile.phone || null,
+      address: this.profile.address || null,
+      postal_code: this.profile.postalCode || null,
+      province: this.profile.province || null,
+      autonomous_community: this.profile.region || null,
+      is_gender_violence_victim: this.profile.genderViolence
+    };
+
+    const socioPayload = {
+      education_level: this.profile.educationLevel,
+      employment_status: this.profile.employmentStatus,
+      gross_annual_income: (this.profile.grossMonthlyIncome || 0) * 12,
+      is_large_family: this.profile.largeFamily,
+      has_disability: this.profile.disability,
+      disability_percentage: this.profile.disabilityPercentage,
+      is_single_parent: this.profile.singleParent,
+      exclusion_risk: this.profile.socialExclusionRisk,
+      dependency_grade: this.profile.dependencyDegree,
+      number_of_children: this.profile.numberOfChildren
+    };
+
+    try {
+      // Save Profile
+      if (this.hasProfile) {
+        await api.client.put('/profile', profilePayload);
+      } else {
+        await api.client.post('/profile', profilePayload);
+        this.hasProfile = true;
+      }
+
+      // Save Socio-Economic
+      if (this.hasSocioEconomic) {
+        await api.client.put('/socio-economic', socioPayload);
+      } else {
+        await api.client.post('/socio-economic', socioPayload);
+        this.hasSocioEconomic = true;
+      }
+
+      // Delete removed housemates
+      for (const id of this.deletedHousemateIds) {
+        try {
+          await api.client.delete(`/housemates/${id}`);
+        } catch(e) { 
+          console.error('Failed to delete housemate', id); 
+        }
+      }
+      this.deletedHousemateIds = [];
+
+      // Add / Update Housemates
+      for (const hm of this.profile.housemates) {
+        const hmPayload = {
+          full_name: hm.name,
+          relation: hm.relation,
+          lives_with: hm.livesWith,
+          is_dependent: hm.dependent,
+          income_annual: (hm.income || 0) * 12,
+          birth_date: hm.birthDate || null
+        };
+        
+        if (hm.id) {
+          await api.client.put(`/housemates/${hm.id}`, hmPayload);
+        } else {
+          const res = await api.client.post('/housemates', hmPayload);
+          hm.id = res.data.id;
+        }
+      }
+
+      this.profile.householdSize = this.profile.housemates.length + 1;
+      this.editMode = false;
+    } catch (err) {
+      console.error('Error saving profile data', err);
+      alert('Hubo un error al guardar los datos.');
+    }
   }
 
   addHousemate() {
@@ -150,14 +336,19 @@ export class MyProfilePage {
       income: 0,
       disability: false,
       age: '',
+      birthDate: ''
     });
   }
 
   removeHousemate(index: number) {
-    this.profile.housemates.splice(index, 1);
+    const removed = this.profile.housemates.splice(index, 1)[0];
+    if (removed.id) {
+      this.deletedHousemateIds.push(removed.id);
+    }
+    this.updateTotalIncome();
   }
 
   yesNo(value: boolean) {
     return value ? 'Sí' : 'No';
   }
-}
+}

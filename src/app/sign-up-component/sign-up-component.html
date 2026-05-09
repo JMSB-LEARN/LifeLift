@@ -88,6 +88,28 @@
                   formControlName="secondSurname"
                   placeholder="Second Surname (Optional)"
                 >
+
+                <input 
+                  type="text" 
+                  formControlName="documentNumber"
+                  placeholder="Document Number (DNI/NIE)" 
+                  required
+                  [class.invalid-input]="signUpForm.get('documentNumber')?.invalid && signUpForm.get('documentNumber')?.touched"
+                >
+                <div class="field-error" *ngIf="signUpForm.get('documentNumber')?.touched && signUpForm.get('documentNumber')?.invalid">
+                  <span *ngIf="signUpForm.get('documentNumber')?.errors?.['required']">Document Number is required.</span>
+                </div>
+
+                <input 
+                  type="date" 
+                  formControlName="birthDate"
+                  placeholder="Birth Date" 
+                  required
+                  [class.invalid-input]="signUpForm.get('birthDate')?.invalid && signUpForm.get('birthDate')?.touched"
+                >
+                <div class="field-error" *ngIf="signUpForm.get('birthDate')?.touched && signUpForm.get('birthDate')?.invalid">
+                  <span *ngIf="signUpForm.get('birthDate')?.errors?.['required']">Birth Date is required.</span>
+                </div>
             </section>
 
             <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
