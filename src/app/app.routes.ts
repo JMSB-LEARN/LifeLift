@@ -7,6 +7,7 @@ import { CentersPage } from './centers-page/centers-page';
 import { FamilyPage } from './family-page/family-page';
 import { SubsidesPage } from './subsides-page/subsides-page';
 import { UnemploymentPage } from './unemployment-page/unemployment-page';
+import { AboutPage } from './about-page/about-page';
 import { NotFoundComponent } from './not-found-component/not-found-component';
 
 export const routes: Routes = [
@@ -19,5 +20,6 @@ export const routes: Routes = [
     {path: 'family', component: FamilyPage},
     {path: 'subsides', component: SubsidesPage},
     {path: 'unemployment', component: UnemploymentPage},
+    {path: 'about', component: AboutPage},
     {path: '**', component: NotFoundComponent}
 ];

@@ -18,6 +18,7 @@ export class HeaderComponent {
   async logout() {
     await AuthService.logout();
     window.location.reload();
+    window.location.href = '/';
   }
 
 }

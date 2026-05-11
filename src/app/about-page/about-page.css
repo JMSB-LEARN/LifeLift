@@ -1,0 +1,31 @@
+:host {
+    display: block;
+}
+
+ul {
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+}
+
+li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+h2 {
+    margin-top: 2rem;
+}
+
+h2:first-child {
+    margin-top: 0;
+}
+
+.page-container {
+    margin-top: 2rem;
+}

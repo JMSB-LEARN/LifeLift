@@ -19,7 +19,7 @@ export class SubsidesPage implements OnInit {
   showOnlyQualified = true;
   hideApplied = false;
 
-  // Manual Filters
+  // Filtros Manuales
   filterUnemployment = false;
   filterFamily = false;
   filterDisability = false;
@@ -28,7 +28,7 @@ export class SubsidesPage implements OnInit {
   expandedGrantId: number | null = null;
   loading = true;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) { }
 
   async ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -56,42 +56,42 @@ export class SubsidesPage implements OnInit {
       this.applications = appsRes.data;
       this.matches = matchesRes.data;
     } catch (err) {
-      console.error('Error fetching data', err);
+      console.error('Error obteniendo datos', err);
     }
     this.loading = false;
   }
 
   get filteredGrants() {
     return this.grants.filter(grant => {
-      // 1. Check if applied
+      // 1. Comprobar si está aplicada
       const isApplied = this.applications.some(a => a.grant_id === grant.id);
       if (this.hideApplied && isApplied) {
         return false;
       }
 
-      // 2. Check if qualified
+      // 2. Comprobar si está calificado
       if (this.showOnlyQualified) {
         const match = this.matches.find(m => m.grant_id === grant.id);
         if (!match || !match.is_eligible) {
           return false;
         }
       } else {
-        // Manual Filtering based on text rules
+        // Filtros Manuales basados en texto
         const text = (grant.title + ' ' + grant.description).toLowerCase();
-        
+
         let pass = true;
-        
-        // If any manual filter is checked, we only show grants that match AT LEAST ONE checked filter 
-        // OR we show all if no filters are checked.
+
+        // Si algún filtro manual está activado, solo mostramos las subvenciones que coincidan con AL MENOS UN filtro activado 
+        // o mostramos todas si no hay filtros activados.
         const anyFilterActive = this.filterUnemployment || this.filterFamily || this.filterDisability || this.filterExclusion;
-        
+
         if (anyFilterActive) {
           let matchedAny = false;
           if (this.filterUnemployment && (text.includes('desempleo') || text.includes('paro'))) matchedAny = true;
           if (this.filterFamily && (text.includes('monoparental') || text.includes('familia numerosa'))) matchedAny = true;
           if (this.filterDisability && (text.includes('discapacidad') || text.includes('minusvalía'))) matchedAny = true;
           if (this.filterExclusion && (text.includes('exclusión social') || text.includes('vulnerabilidad'))) matchedAny = true;
-          
+
           if (!matchedAny) pass = false;
         }
 
@@ -123,8 +123,8 @@ export class SubsidesPage implements OnInit {
       });
       this.applications.push(res.data);
     } catch (err) {
-      console.error('Error applying', err);
-      alert('Error al marcar como aplicado');
+      console.error('Error al marcar como solicitada', err);
+      alert('Error al marcar como solicitada');
     }
   }
 
@@ -137,10 +137,10 @@ export class SubsidesPage implements OnInit {
       return;
     }
 
-    // Find the application ID for this grant
+    // Busca el ID de la solicitud para esta subvención
     const application = this.applications.find(a => a.grant_id === grantId);
     if (!application) {
-      alert('Debes marcarla como aplicada antes de subir un documento.');
+      alert('Debes marcarla como solicitada antes de subir un documento.');
       return;
     }
 

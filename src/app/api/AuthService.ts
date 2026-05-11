@@ -1,22 +1,22 @@
 import { api } from './ApiClient';
 import { User, DocumentTypeEnum } from './models';
 
-// Re-export User so existing imports in components don't break
+// Expor User para que las importaciones existentes en los componentes no se rompan.
 export type { User };
 
-// Define the expected response from the login endpoint
+// Definicion de la respuesta esperada del endpoint de inicio de sesión.
 interface LoginResponse {
   token: string;
   user?: User;
 }
 
-// Define the expected response from the register endpoint
+// Definicion de la respuesta esperada del endpoint de registro.
 interface RegisterResponse {
   message: string;
   user: User;
 }
 
-// Define the registration payload
+// Definicion de la carga útil de registro.
 interface RegisterPayload {
   username: string;
   email: string;
@@ -45,7 +45,7 @@ class AuthService {
   }
 
   /**
-   * Authenticates the user and sets the access token in memory
+   * Autentica al usuario y establece el token de acceso en memoria.
    */
   async login(username: string, password: string): Promise<void> {
     const { data } = await api.client.post<LoginResponse>('/login', {
@@ -53,72 +53,63 @@ class AuthService {
       password
     });
 
-    // Store the token in the ApiClient instance memory
+    // Guardamos el token en la instancia ApiClient.
     api.setToken(data.token);
 
-    // Store user info if provided in response
+    // Guardamos la información del usuario si se proporciona en la respuesta.
     if (data.user) {
       this.currentUser = data.user;
       try {
         localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(data.user));
       } catch {
-        // ignore storage errors
+        // Ignoramos los errores en este caso.
       }
     }
   }
 
-  /**
-   * Registers a new user with the provided information
-   */
+
+  //Registra un nuevo usuario con la información proporcionada.
+
   async register(payload: RegisterPayload): Promise<User> {
     const { data } = await api.client.post<RegisterResponse>('/register', payload);
     return data.user;
   }
 
-  /**
-   * Gets the current logged-in user (from memory, no API call)
-   */
+
+  //Obtiene el usuario actual logueado.
   getCurrentUser(): User | null {
     return this.currentUser;
   }
 
-  /**
-   * Checks if a user is currently logged in
-   */
+  //Verifica si un usuario está actualmente logueado.
   isLoggedIn(): boolean {
     return this.currentUser !== null;
   }
 
-  /**
-   * Logs out the user and clears the token from memory
-   */
   async logout(): Promise<void> {
     try {
       await api.client.post('/logout');
     } finally {
-      // We clear the token even if the request fails 
-      // to ensure the client-side session is closed.
+      // Borramos el token incluso si la solicitud falla y así asegurar que la sesión del lado del cliente está cerrada.
       api.setToken(null);
       this.currentUser = null;
       try {
         localStorage.removeItem(this.USER_STORAGE_KEY);
       } catch {
-        // ignore storage errors
+        // Ignoramos los errores en este caso.
       }
+      // Volver a inicio y recargar para liberar memoria
+      window.location.href = '/';
     }
   }
 
-  /**
-   * Retrieves the current user's profile
-   */
+  //Obtiene el perfil del usuario actual.
   async getProfile(): Promise<any> {
     const { data } = await api.client.get<any>('/profile');
     return data;
   }
 
-  /**
-   * Changes the current user's password
-   */
+  //Cambia la contraseña del usuario actual.
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
     await api.client.put('/change-password', {
       currentPassword,
@@ -127,5 +118,5 @@ class AuthService {
   }
 }
 
-// Export a single instance to maintain a consistent state across the app
+// Exportamos una única instancia para mantener un estado consistente en toda la aplicación.
 export default new AuthService();

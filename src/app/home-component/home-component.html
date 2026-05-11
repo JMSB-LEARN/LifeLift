@@ -1,11 +1,11 @@
 <section class="hero">
     <div class="hero-content">
-        <h1 *ngIf="!isLoggedIn">Welcome to LifeLift</h1>
-        <h1 *ngIf="isLoggedIn">Welcome back, {{ currentUser?.username || currentUser?.first_name }}!</h1>
-        <p>Empowering your journey with confidence and support.</p>
+        <h1 *ngIf="!isLoggedIn">Bienvenido a LifeLift</h1>
+        <h1 *ngIf="isLoggedIn">Bienvenido de nuevo, {{ currentUser?.username || currentUser?.first_name }}!</h1>
+        <p>Empoderando tu viaje con confianza y apoyo.</p>
         <nav>
-            <a class="cta-button" routerLink="/signup" *ngIf="!isLoggedIn">Get Started</a>
-            <a class="cta-button" routerLink="/my-profile" *ngIf="isLoggedIn">My Profile</a>
+            <a class="cta-button" routerLink="/login" *ngIf="!isLoggedIn">Empieza ya</a>
+            <a class="cta-button" routerLink="/profile" *ngIf="isLoggedIn">Mi perfil</a>
         </nav>
     </div>
 </section>
