@@ -6,7 +6,6 @@ import axios, {
 } from 'axios';
 
 
-// Extend the InternalAxiosRequestConfig to include our custom flag
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
@@ -48,12 +47,12 @@ class ApiClient {
         localStorage.removeItem(this.TOKEN_STORAGE_KEY);
       }
     } catch {
-      // ignore storage errors
+      // Ignoramos los  errores en este caso.
     }
   }
 
   private _setupInterceptors(): void {
-    // Request Interceptor
+    // Interceptor de solicitud
     this.client.interceptors.request.use(
       (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
         if (this.accessToken) {
@@ -64,22 +63,22 @@ class ApiClient {
       (error: AxiosError) => Promise.reject(error)
     );
 
-    // Response Interceptor
+    // Interceptor de respuesta
     this.client.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error: AxiosError) => {
         const originalRequest = error.config as CustomAxiosRequestConfig;
 
-        // If error is 401 and we haven't retried yet
+        // Si el error es 401 y no se ha reintentado.
         if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
           originalRequest._retry = true;
 
           const newToken = await this.refreshToken();
 
           if (newToken) {
-            // Update the header with the fresh token
+            // Actualizamos la cabecera con el token actualizado
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            // Retry the original request with the new instance config
+            // Reintentamos la solicitud original con la nueva configuración de instancia
             return this.client(originalRequest);
           }
         }
@@ -120,6 +119,6 @@ class ApiClient {
   }
 }
 
-// Accessing the variable from environme
+// TODO CONFIGURAR PARA LA ENV.
 const BASE_URL = 'https://life-lift-api.vercel.app/api';
 export const api = new ApiClient(BASE_URL);

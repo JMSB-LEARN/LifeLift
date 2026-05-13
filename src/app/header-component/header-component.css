@@ -4,8 +4,8 @@
     top: 0;
     height: fit-content;
     z-index: 1000;
-    background-color: var(--primary-color);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background: var(--primary-color);
+    box-shadow: 0 4px 6px -1px #0001, 0 2px 4px -1px #0000000f;
 }
 
 .routerLinkContainer {
@@ -17,31 +17,47 @@
     padding: var(--spacing-md) var(--spacing-lg);
 }
 
-nav {
-    display: flex;
-    gap: var(--spacing-lg);
-}
+nav { display: flex; }
 
 nav a, nav button {
-    height: wrap-content;
-    align-self: center;
+    text-align: center;
+    min-width: 8rem;
+    height: 4rem;
+    align-content: center;
     text-decoration: none;
     color: var(--surface-color);
     font-weight: 600;
     font-size: var(--font-size-lg);
-    transition: color 0.2s ease;
+    transition: color .2s ease;
     background: none;
     border: none;
     cursor: pointer;
+    border-style: solid;
+    border-color: var(--text-secondary);
+    border-width: 0px 1px;
+    background-color: rgba(255, 255, 255, 0.062);
+}
+nav a:last-child, nav button:last-child {
+    border-width: 0px;
+    background-color: transparent;
 }
 
-nav a:hover, nav button:hover {
-    color: var(--highlight-color);
-}
+nav a:hover, nav button:hover { color: var(--highlight-color); }
 
 img {
-    -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black);
-    filter: drop-shadow(0 1px 1px var(--highlight-color)) drop-shadow(-1px -1px 2px black) drop-shadow(1px -1px 2px black);
+    -webkit-filter: drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000);
+    filter: drop-shadow(0 1px 1px var(--highlight-color)) drop-shadow(-1px -1px 2px #000) drop-shadow(1px -1px 2px #000);
     width: 7em;
     margin-right: 30%;
+}
+
+nav a.active-link {
+    background-color: var(--highlight-color);
+    color: var(--primary-color);
+    border-color: var(--highlight-color);
+}
+
+nav a[routerLink="/"].active-link:has(img) {
+    background-color: transparent;
+    border: none;
 }

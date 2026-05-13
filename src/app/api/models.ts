@@ -18,9 +18,7 @@ export interface User {
   updated_at: string;
   last_login?: string | null;
 
-  // The following fields were in the original User interface from AuthService
-  // and are kept here to prevent breaking the frontend components abruptly.
-  // Ideally, they should be mapped properly or components updated to use the Profile interface.
+  // Campos de migracion de auth service
   first_name?: string;
   surname?: string;
   second_surname?: string;
@@ -107,6 +105,8 @@ export interface UserApplication {
   applied_at?: string | null;
   created_at: string;
   updated_at: string;
+  has_document?: boolean;
+  document_name?: string | null;
 }
 
 export interface GrantMatch {

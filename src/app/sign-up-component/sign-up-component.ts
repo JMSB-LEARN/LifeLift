@@ -88,7 +88,7 @@ export class SignUpComponent {
 
     if (!this.signUpForm.valid) {
       this.signUpForm.markAllAsTouched();
-      this.errorMessage = 'Please complete all required fields correctly.';
+      this.errorMessage = 'Por favor complete todos los campos correctamente.';
       return;
     }
 
@@ -109,16 +109,16 @@ export class SignUpComponent {
         birth_date: birthDate
       });
 
-      this.successMessage = 'Account created successfully! Redirecting to login...';
+      this.successMessage = 'Cuenta creada correctamente! Redirigiendo al inicio...';
       setTimeout(() => {
         this.router.navigate(['/login']);
       }, 2000);
     } catch (error: any) {
-      console.error('Sign up failed', error);
+      console.error('Error al registrarse', error);
       this.errorMessage =
         error?.response?.data?.message ||
         error?.message ||
-        'Sign up failed. Please try again.';
+        'Error al registrarse. Por favor, intenta de nuevo.';
     } finally {
       this.isLoading = false;
     }

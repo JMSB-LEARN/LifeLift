@@ -37,7 +37,7 @@ export class LogInComponent {
 
     if (!this.loginForm.valid) {
       this.loginForm.markAllAsTouched();
-      this.errorMessage = 'Please complete all required fields.';
+      this.errorMessage = 'Por favor complete todos los campos.';
       return;
     }
 
@@ -45,14 +45,14 @@ export class LogInComponent {
 
     try {
       await AuthService.login(username, password);
-      console.log('Login successful');
+      console.log('Inicio de sesión exitoso');
       this.router.navigate(['/']);
     } catch (error: any) {
-      console.error('Login failed', error);
+      console.error('Inicio de sesión fallido', error);
       this.errorMessage =
         error?.response?.data?.message ||
         error?.message ||
-        'Login failed. Please try again.';
+        'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.';
     }
   }
 }

@@ -1,12 +1,12 @@
 :root {
     /* Color Palette */
-    --primary-color: #3B82F6;
+    --primary-color: #003288;
     /* Soft Blue */
-    --secondary-color: #10B981;
+    --secondary-color: #008b5d;
     /* Emerald Green */
-    --background-color: #F9FAFB;
+    --background-color: #f9fafbfb;
     /* Grayish White */
-    --surface-color: #FFFFFF;
+    --surface-color: #f9fafbfb;
     /* Pure White */
     --text-main: #111827;
     /* Dark Gray */
@@ -77,18 +77,20 @@ button {
 }
 
 .page-hero {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(200deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: var(--surface-color);
     padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-2xl);
     text-align: center;
     padding-top: 6vh;
     min-height: 88vh;
 }
+
 .page-hero h1 {
     font-size: var(--font-size-3xl);
     font-weight: 800;
     margin-bottom: var(--spacing-sm);
 }
+
 .page-hero p {
     font-size: var(--font-size-lg);
     opacity: 0.9;
@@ -105,11 +107,11 @@ button {
 
 .page-section {
     background: var(--surface-color);
-    border-radius: 24px;
+    border-radius: 8px;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
     padding: var(--spacing-xl);
+    margin-top: 5vh;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    margin-bottom: var(--spacing-2xl);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 

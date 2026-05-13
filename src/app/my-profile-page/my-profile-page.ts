@@ -180,17 +180,17 @@ export class MyProfilePage implements OnInit {
           this.profile.housemates = [];
         }
       } catch (e) {
-        console.error('Error fetching housemates', e);
+        console.error('Error cargando convivientes', e);
       }
       
       this.profile.householdSize = this.profile.housemates.length + 1;
       this.updateTotalIncome();
     } catch (err) {
-      console.error('Error loading complete profile data:', err);
+      console.error('Error cargando datos completos del perfil:', err);
     }
   }
 
-  // Lógica para asignar Región automáticamente al cambiar Provincia
+  // Asigna automáticamente la Comunidad Autónoma al cambiar Provincia
   onProvinceChange(newProvince: string) {
     for (const [region, provincias] of Object.entries(this.comunidadesProvincias)) {
       if (provincias.includes(newProvince)) {
@@ -244,9 +244,9 @@ export class MyProfilePage implements OnInit {
         this.newPassword = '';
         this.confirmPassword = '';
       } catch (err: any) {
-        console.error('Error changing password', err);
+        console.error('Error cambiando contraseña', err);
         alert(err.response?.data?.message || 'Error al cambiar la contraseña. Verifica tu contraseña actual.');
-        return; // Stop profile saving if password fails
+        return;
       }
     }
 
@@ -289,7 +289,7 @@ export class MyProfilePage implements OnInit {
     };
 
     try {
-      // Save Profile
+      // Guardar Perfil
       if (this.hasProfile) {
         await api.client.put('/profile', profilePayload);
       } else {
@@ -297,7 +297,7 @@ export class MyProfilePage implements OnInit {
         this.hasProfile = true;
       }
 
-      // Save Socio-Economic
+      // Guardar Datos Socioeconómicos
       if (this.hasSocioEconomic) {
         await api.client.put('/socio-economic', socioPayload);
       } else {
@@ -305,17 +305,17 @@ export class MyProfilePage implements OnInit {
         this.hasSocioEconomic = true;
       }
 
-      // Delete removed housemates
+      // Eliminar convivientes eliminados
       for (const id of this.deletedHousemateIds) {
         try {
           await api.client.delete(`/housemates/${id}`);
         } catch(e) { 
-          console.error('Failed to delete housemate', id); 
+          console.error('Fallo al eliminar conviviente', id); 
         }
       }
       this.deletedHousemateIds = [];
 
-      // Add / Update Housemates
+      // Añadir / Actualizar convivientes
       for (const hm of this.profile.housemates) {
         const hmPayload = {
           full_name: hm.name,
@@ -337,7 +337,7 @@ export class MyProfilePage implements OnInit {
       this.profile.householdSize = this.profile.housemates.length + 1;
       this.editMode = false;
     } catch (err) {
-      console.error('Error saving profile data', err);
+      console.error('Error guardando datos del perfil', err);
       alert('Hubo un error al guardar los datos.');
     }
   }
@@ -379,4 +379,4 @@ export class MyProfilePage implements OnInit {
     };
     return map[rel] || rel;
   }
-}
+}

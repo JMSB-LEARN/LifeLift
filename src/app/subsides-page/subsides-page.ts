@@ -128,35 +128,70 @@ export class SubsidesPage implements OnInit {
     }
   }
 
-  async onFileSelected(event: any, grantId: number) {
-    const file: File = event.target.files[0];
-    if (!file) return;
+async onFileSelected(event: any, grantId: number) {
+  const file: File = event.target.files[0];
+  if (!file) return;
 
-    if (file.size > 15 * 1024 * 1024) {
-      alert('El archivo supera los 15MB permitidos.');
-      return;
+  const application = this.applications.find(a => a.grant_id === grantId);
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      await api.client.put(`/applications/${application.id}/document`, {
+        document_pdf: reader.result as string,
+        document_name: file.name
+      });
+      await this.fetchData(); // Refrescamos para ver los cambios
+    } catch (err) {
+      alert('Error al subir');
     }
+  };
+  reader.readAsDataURL(file);
+}
 
-    // Busca el ID de la solicitud para esta subvención
-    const application = this.applications.find(a => a.grant_id === grantId);
-    if (!application) {
-      alert('Debes marcarla como solicitada antes de subir un documento.');
-      return;
-    }
+async deleteDocument(grantId: number) {
+  const application = this.applications.find(a => a.grant_id === grantId);
+  if (!application) return;
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-      try {
-        await api.client.put(`/applications/${application.id}/document`, {
-          document_pdf: base64
-        });
-        alert('Documento subido correctamente.');
-      } catch (err) {
-        console.error(err);
-        alert('Error al subir el documento.');
-      }
-    };
-    reader.readAsDataURL(file);
+  try {
+    await api.client.delete(`/applications/${application.id}/document`);
+    await this.fetchData(); // Refrescamos para confirmar que se ha eliminado
+  } catch (err) {
+    console.error('Error al eliminar el documento', err);
+    alert('Error al eliminar el documento.');
   }
 }
+getFileName(grantId: number): string {
+  return this.applications.find(a => a.grant_id === grantId)?.document_name || 'Archivo adjunto';
+}
+
+  // Añade estos métodos a la clase SubsidesPage
+
+  hasDocument(grantId: number): boolean {
+    const application = this.applications.find(a => a.grant_id === grantId);
+    return !!application?.has_document;
+  }
+
+  async downloadDocument(grantId: number) {
+    const application = this.applications.find(a => a.grant_id === grantId);
+    if (!application) return;
+
+    try {
+      const res = await api.client.get(`/applications/${application.id}/document`);
+      const base64Data = res.data.document_pdf;
+
+      // Crear un link temporal para la descarga
+      const link = document.createElement('a');
+      link.href = base64Data;
+      link.download = `documento_solicitud_${grantId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('Error al descargar el documento', err);
+      alert('No se pudo descargar el documento.');
+    }
+  }
+
+  
+}
+

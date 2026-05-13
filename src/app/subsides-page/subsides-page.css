@@ -5,6 +5,7 @@
 
 .filters-panel {
     margin-bottom: 2rem;
+    border: 2px solid var(--secondary-color);
 }
 
 .manual-filters {
@@ -22,19 +23,19 @@
 .grant-card {
     background: var(--surface-color);
     border-radius: var(--radius-lg, 8px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     margin-bottom: 1rem;
     overflow: hidden;
     transition: box-shadow 0.2s;
-    border: 1px solid #eee;
+    box-shadow: 2px 5px 4px rgba(0, 0, 0, 0.342);
+    border: 2px solid var(--secondary-color);
 }
 
 .grant-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.534);
 }
 
 .grant-card.expanded {
-    border-color: var(--primary-color);
+    border-color: var(--secondary-color);
 }
 
 .grant-header {
@@ -75,7 +76,7 @@
 
 .grant-details {
     padding: 0 1.5rem 1.5rem;
-    border-top: 1px solid #eee;
+    border-top: 2px solid var(--secondary-color);
     margin-top: 1rem;
     padding-top: 1.5rem;
 }
@@ -117,7 +118,8 @@
     font-size: 0.9rem;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     border-radius: 999px;
@@ -138,7 +140,8 @@
     color: #374151;
 }
 
-.btn-primary:hover, .btn-secondary:hover {
+.btn-primary:hover,
+.btn-secondary:hover {
     opacity: 0.9;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

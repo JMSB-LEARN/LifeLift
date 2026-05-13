@@ -1,17 +1,17 @@
 <div class="routerLinkContainer">
     <nav class="nav-links-left">
-        <a routerLink="/">Inicio</a>
-        <a routerLink="/subsides">Subsidios</a>
-        <a routerLink="/centers">Centros</a>
-        <a routerLink="/profile">Mi perfil</a>
-        <a routerLink="/family">Mi familia</a>
-        <a routerLink="/unemployment">Desempleo</a>
+        <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+        <a routerLink="/subsides" routerLinkActive="active-link">Subsidios</a>
+        <a routerLink="/centers" routerLinkActive="active-link">Centros</a>
+        <a routerLink="/profile" routerLinkActive="active-link">Mi perfil</a>
+        <a routerLink="/family" routerLinkActive="active-link">Mi familia</a>
+        <a routerLink="/unemployment" routerLinkActive="active-link">Desempleo</a>
         <a routerLink="/"><img src="/media/image1.png" alt=""></a>
     </nav>
     <nav class="login-signup-right-nav">
         <ng-container *ngIf="!isLoggedIn">
-            <a routerLink="/login">Log In</a>
-            <a routerLink="/signup">Sign Up</a>
+            <a routerLink="/login" routerLinkActive="active-link">Log In</a>
+            <a routerLink="/signup" routerLinkActive="active-link">Sign Up</a>
         </ng-container>
         <ng-container *ngIf="isLoggedIn">
             <button (click)="logout()">Log Out</button>

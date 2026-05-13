@@ -35,7 +35,7 @@ export class FamilyPage implements OnInit {
       this.socioEconomic = socioRes.data;
       this.housemates = housematesRes.data;
     } catch (err) {
-      console.error('Error fetching family data', err);
+      console.error('Error obteniendo los datos', err);
     }
     this.loading = false;
   }

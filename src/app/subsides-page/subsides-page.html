@@ -17,10 +17,14 @@
             <div *ngIf="!showOnlyQualified" class="manual-filters">
                 <h3 style="margin-bottom: 10px; font-size: 1rem;">Filtros manuales:</h3>
                 <div class="checkbox-grid">
-                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterUnemployment" /> Desempleo</label>
-                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterFamily" /> Familia Numerosa / Monoparental</label>
-                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterDisability" /> Discapacidad</label>
-                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterExclusion" /> Exclusión Social</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterUnemployment" />
+                        Desempleo</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterFamily" /> Familia
+                        Numerosa / Monoparental</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterDisability" />
+                        Discapacidad</label>
+                    <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterExclusion" /> Exclusión
+                        Social</label>
                 </div>
             </div>
         </div>
@@ -32,7 +36,8 @@
         </div>
 
         <div class="grants-list" *ngIf="!loading" style="text-align: left;">
-            <div class="grant-card" *ngFor="let grant of filteredGrants" [class.expanded]="expandedGrantId === grant.id">
+            <div class="grant-card" *ngFor="let grant of filteredGrants"
+                [class.expanded]="expandedGrantId === grant.id">
                 <div class="grant-header" (click)="toggleExpand(grant.id)">
                     <div class="grant-title-group">
                         <span class="status-badge" *ngIf="isApplied(grant.id)">Aplicada</span>
@@ -44,20 +49,39 @@
                 <div class="grant-details" *ngIf="expandedGrantId === grant.id">
                     <p class="grant-desc">{{ grant.description }}</p>
                     <div class="grant-meta">
-                        <span *ngIf="grant.min_amount"><strong>Importe:</strong> Desde {{ grant.min_amount | currency:'EUR' }} hasta {{ grant.max_amount | currency:'EUR' }}</span>
+                        <span *ngIf="grant.min_amount"><strong>Importe:</strong> Desde {{ grant.min_amount |
+                            currency:'EUR' }} hasta {{ grant.max_amount | currency:'EUR' }}</span>
                         <span><strong>Ámbito:</strong> {{ grant.scope }}</span>
-                        <span *ngIf="grant.closing_date"><strong>Cierre:</strong> {{ grant.closing_date | date:'shortDate' }}</span>
+                        <span *ngIf="grant.closing_date"><strong>Cierre:</strong> {{ grant.closing_date |
+                            date:'shortDate' }}</span>
                     </div>
 
                     <div class="grant-actions">
-                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary">Más información</a>
+                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary">Más
+                            información</a>
 
                         <button *ngIf="!isApplied(grant.id)" class="btn-primary" (click)="markAsApplied(grant.id)">
                             Marcar como Aplicada
                         </button>
-
                         <div *ngIf="isApplied(grant.id)" class="upload-section">
-                            <label>Adjuntar documentación (PDF, max 15MB):</label>
+                            <div *ngIf="hasDocument(grant.id)" class="file-info"
+                                style="margin-bottom: 1rem; padding: 10px; background: #edfdf1; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 0.8rem; color: #10b981; font-weight: bold;">Documento
+                                        cargado:</span>
+                                    <span style="font-size: 0.9rem; color: #374151;">{{ getFileName(grant.id) }}</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-secondary" style="padding: 5px 10px;"
+                                        (click)="downloadDocument(grant.id)">Descargar</button>
+                                    <button class="btn-secondary" style="padding: 5px 10px; color: #dc2626;"
+                                        (click)="deleteDocument(grant.id)">Borrar</button>
+                                </div>
+                            </div>
+
+                            <label style="display: block; margin-top: 10px;">
+                                {{ hasDocument(grant.id) ? 'Reemplazar archivo:' : 'Adjuntar documentación (PDF):' }}
+                            </label>
                             <input type="file" accept="application/pdf" (change)="onFileSelected($event, grant.id)" />
                         </div>
                     </div>
