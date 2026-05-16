@@ -113,3 +113,9 @@
 .text-left {
     text-align: left;
 }
+
+.grant-details{
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-sm);
+}

@@ -6,7 +6,7 @@
         <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
         <a routerLink="/subsides" routerLinkActive="active-link">Subsidios</a>
         <a routerLink="/centers" routerLinkActive="active-link">Centros</a>
-        <a routerLink="/profile" routerLinkActive="active-link">Mi perfil</a>
+        <a *ngIf="isLoggedIn" routerLink="/profile" routerLinkActive="active-link">Mi perfil</a>
         <!--
         <a routerLink="/family" routerLinkActive="active-link">Mi familia</a>
         <a routerLink="/unemployment" routerLinkActive="active-link">Desempleo</a>

@@ -54,16 +54,13 @@
                 <div class="grant-details" *ngIf="expandedGrantId === grant.id">
                     <p class="grant-desc">{{ grant.description }}</p>
                     <div class="grant-meta">
-                        <span *ngIf="grant.min_amount"><strong>Importe:</strong> Desde {{ grant.min_amount |
-                            currency:'EUR' }} hasta {{ grant.max_amount | currency:'EUR' }}</span>
+                        <span *ngIf="grant.min_amount"><strong>Importe:</strong> Desde {{ grant.min_amount | currency:'EUR' }} hasta {{ grant.max_amount | currency:'EUR' }}</span>
                         <span><strong>Ámbito:</strong> {{ grant.scope }}</span>
-                        <span *ngIf="grant.closing_date"><strong>Cierre:</strong> {{ grant.closing_date |
-                            date:'shortDate' }}</span>
+                        <span *ngIf="grant.closing_date"><strong>Cierre:</strong> {{ grant.closing_date | date:'shortDate' }}</span>
                     </div>
 
                     <div class="grant-actions">
-                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary">Más
-                            información</a>
+                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary">Más información</a>
 
                         <button *ngIf="!isApplied(grant.id)" class="btn-primary" (click)="markAsApplied(grant.id)">
                             Marcar como Aplicada
@@ -83,10 +80,17 @@
                                 </div>
                             </div>
 
-                            <label class="upload-label">
-                                {{ hasDocument(grant.id) ? 'Reemplazar archivo:' : 'Adjuntar documentación (PDF):' }}
-                            </label>
-                            <input type="file" accept="application/pdf" (change)="onFileSelected($event, grant.id)" />
+                            <div class="custom-upload-container">
+                                <label class="btn-pill btn-upload-trigger">
+                                    {{ hasDocument(grant.id) ? 'Reemplazar archivo PDF' : 'Adjuntar documentación (PDF)' }}
+                                    <input 
+                                      type="file" 
+                                      accept="application/pdf" 
+                                      (change)="onFileSelected($event, grant.id)" 
+                                      class="hidden-file-input" 
+                                    />
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
