@@ -14,7 +14,6 @@
             </div>
         </div>
 
-        <!-- MODO VISTA (Solo lectura) -->
         <ng-container *ngIf="!editMode; else editForm">
             <section class="profile-section">
                 <h2>Datos personales</h2>
@@ -134,17 +133,15 @@
                     <hr class="summary-divider">
                     <div class="income-total">
                         <strong>Ingresos Totales Familiares</strong>
-                        <strong class="summary-value" style="padding: 0.5rem 1.2rem; border-radius: 12px; font-size: 1.5rem;">{{ profile.totalHouseholdIncome | currency:'EUR' }}</strong>
+                        <strong class="total-value">{{ profile.totalHouseholdIncome | currency:'EUR' }}</strong>
                     </div>
                 </div>
             </section>
         </ng-container>
 
-        <!-- MODO EDICIÓN -->
         <ng-template #editForm>
             <form class="profile-form" (ngSubmit)="saveProfile()">
 
-                <!-- SECCIÓN: DATOS BÁSICOS -->
                 <section class="profile-section">
                     <h2>Datos personales</h2>
                     <div class="grid-3 edit-grid">
@@ -175,7 +172,6 @@
                     </div>
                 </section>
 
-                <!-- SECCIÓN: LOCALIZACIÓN (ESPAÑA) -->
                 <section class="profile-section">
                     <h2>Dirección en España</h2>
                     <div class="grid-2 edit-grid">
@@ -200,7 +196,6 @@
                     </div>
                 </section>
 
-                <!-- SECCIÓN: ECONOMÍA Y TRABAJO -->
                 <section class="profile-section">
                     <h2>Situación Económica</h2>
                     <div class="grid-2 edit-grid">
@@ -233,7 +228,6 @@
                     </div>
                 </section>
 
-                <!-- SECCIÓN: CIRCUNSTANCIAS ESPECIALES -->
                 <section class="profile-section">
                     <h2>Circunstancias Especiales</h2>
                     <div class="checkbox-grid">
@@ -263,14 +257,13 @@
                     </div>
                 </section>
 
-                <!-- SECCIÓN: UNIDAD FAMILIAR -->
                 <section class="profile-section">
                     <div class="household-header">
                         <h2>Unidad de Convivencia</h2>
                         <button type="button" class="btn-add" (click)="addHousemate()">+ Añadir Persona</button>
                     </div>
 
-                    <div class="grid-2 edit-grid" style="margin-bottom: 1.5rem;">
+                    <div class="grid-2 edit-grid mb-15">
                         <label>Hijos a cargo
                             <input type="number" [(ngModel)]="profile.numberOfChildren" name="numberOfChildren" min="0" />
                         </label>
@@ -314,10 +307,9 @@
                     </div>
                 </section>
 
-                <!-- SECCIÓN: CAMBIAR CONTRASEÑA -->
                 <section class="profile-section">
                     <h2>Cambiar Contraseña</h2>
-                    <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: var(--font-size-sm);">Déjalo en blanco si no deseas cambiar tu contraseña actual.</p>
+                    <p class="password-hint">Déjalo en blanco si no deseas cambiar tu contraseña actual.</p>
                     <div class="grid-3 edit-grid">
                         <label>Contraseña Actual
                             <input type="password" [(ngModel)]="currentPassword" name="currentPassword" placeholder="••••••••" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" />

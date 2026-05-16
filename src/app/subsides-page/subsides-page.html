@@ -2,20 +2,25 @@
     <h1>Subsidios</h1>
     <p>Descubre los subsidios disponibles para ti y tu familia.</p>
 
-    <div class="page-container" style="margin-top: 2rem;">
-        <div class="page-section filters-panel" style="text-align: left;">
-            <label class="checkbox-container" style="font-weight: bold; margin-bottom: 10px;">
+    <div class="page-container">
+        <div class="page-section filters-panel">
+            <div class="search-container">
+                <input type="text" [(ngModel)]="searchText" placeholder="Buscar por nombre o descripción..."
+                    class="search-input" />
+            </div>
+            
+            <label class="checkbox-container label-bold mb-10">
                 <input type="checkbox" [(ngModel)]="showOnlyQualified" name="showOnlyQualified" />
                 Ver ayudas a las que califico
             </label>
 
-            <label class="checkbox-container" style="margin-bottom: 20px;">
+            <label class="checkbox-container mb-20">
                 <input type="checkbox" [(ngModel)]="hideApplied" name="hideApplied" />
                 Ocultar ayudas a las que ya he aplicado
             </label>
 
             <div *ngIf="!showOnlyQualified" class="manual-filters">
-                <h3 style="margin-bottom: 10px; font-size: 1rem;">Filtros manuales:</h3>
+                <h3 class="filter-title">Filtros manuales:</h3>
                 <div class="checkbox-grid">
                     <label class="checkbox-container"><input type="checkbox" [(ngModel)]="filterUnemployment" />
                         Desempleo</label>
@@ -29,13 +34,13 @@
             </div>
         </div>
 
-        <div *ngIf="loading" class="loading-state" style="text-align: left;">Cargando ayudas...</div>
+        <div *ngIf="loading" class="loading-state text-left">Cargando ayudas...</div>
 
-        <div *ngIf="!loading && filteredGrants.length === 0" class="empty-state" style="text-align: left;">
+        <div *ngIf="!loading && filteredGrants.length === 0" class="empty-state text-left">
             No se encontraron ayudas con los filtros actuales.
         </div>
 
-        <div class="grants-list" *ngIf="!loading" style="text-align: left;">
+        <div class="grants-list text-left" *ngIf="!loading">
             <div class="grant-card" *ngFor="let grant of filteredGrants"
                 [class.expanded]="expandedGrantId === grant.id">
                 <div class="grant-header" (click)="toggleExpand(grant.id)">
@@ -63,23 +68,22 @@
                         <button *ngIf="!isApplied(grant.id)" class="btn-primary" (click)="markAsApplied(grant.id)">
                             Marcar como Aplicada
                         </button>
+                        
                         <div *ngIf="isApplied(grant.id)" class="upload-section">
-                            <div *ngIf="hasDocument(grant.id)" class="file-info"
-                                style="margin-bottom: 1rem; padding: 10px; background: #edfdf1; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
-                                <div style="display: flex; flex-direction: column;">
-                                    <span style="font-size: 0.8rem; color: #10b981; font-weight: bold;">Documento
-                                        cargado:</span>
-                                    <span style="font-size: 0.9rem; color: #374151;">{{ getFileName(grant.id) }}</span>
+                            <div *ngIf="hasDocument(grant.id)" class="file-info-box">
+                                <div class="file-details">
+                                    <span class="file-label">Documento cargado:</span>
+                                    <span class="file-name">{{ getFileName(grant.id) }}</span>
                                 </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn-secondary" style="padding: 5px 10px;"
+                                <div class="file-actions">
+                                    <button class="btn-secondary btn-small"
                                         (click)="downloadDocument(grant.id)">Descargar</button>
-                                    <button class="btn-secondary" style="padding: 5px 10px; color: #dc2626;"
+                                    <button class="btn-secondary btn-small btn-danger"
                                         (click)="deleteDocument(grant.id)">Borrar</button>
                                 </div>
                             </div>
 
-                            <label style="display: block; margin-top: 10px;">
+                            <label class="upload-label">
                                 {{ hasDocument(grant.id) ? 'Reemplazar archivo:' : 'Adjuntar documentación (PDF):' }}
                             </label>
                             <input type="file" accept="application/pdf" (change)="onFileSelected($event, grant.id)" />

@@ -24,11 +24,16 @@ export class SubsidesPage implements OnInit {
   filterFamily = false;
   filterDisability = false;
   filterExclusion = false;
+  searchText: string = '';
 
   expandedGrantId: number | null = null;
   loading = true;
 
   constructor(private route: ActivatedRoute) { }
+  
+  
+  
+
 
   async ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -63,26 +68,22 @@ export class SubsidesPage implements OnInit {
 
   get filteredGrants() {
     return this.grants.filter(grant => {
-      // 1. Comprobar si está aplicada
       const isApplied = this.applications.some(a => a.grant_id === grant.id);
-      if (this.hideApplied && isApplied) {
-        return false;
+      if (this.hideApplied && isApplied) return false;
+
+      if (this.searchText) {
+        const search = this.searchText.toLowerCase();
+        const titleMatch = grant.title.toLowerCase().includes(search);
+        const descMatch = grant.description.toLowerCase().includes(search);
+        if (!titleMatch && !descMatch) return false;
       }
 
-      // 2. Comprobar si está calificado
       if (this.showOnlyQualified) {
         const match = this.matches.find(m => m.grant_id === grant.id);
-        if (!match || !match.is_eligible) {
-          return false;
-        }
+        if (!match || !match.is_eligible) return false;
       } else {
-        // Filtros Manuales basados en texto
         const text = (grant.title + ' ' + grant.description).toLowerCase();
-
         let pass = true;
-
-        // Si algún filtro manual está activado, solo mostramos las subvenciones que coincidan con AL MENOS UN filtro activado 
-        // o mostramos todas si no hay filtros activados.
         const anyFilterActive = this.filterUnemployment || this.filterFamily || this.filterDisability || this.filterExclusion;
 
         if (anyFilterActive) {
@@ -91,17 +92,13 @@ export class SubsidesPage implements OnInit {
           if (this.filterFamily && (text.includes('monoparental') || text.includes('familia numerosa'))) matchedAny = true;
           if (this.filterDisability && (text.includes('discapacidad') || text.includes('minusvalía'))) matchedAny = true;
           if (this.filterExclusion && (text.includes('exclusión social') || text.includes('vulnerabilidad'))) matchedAny = true;
-
           if (!matchedAny) pass = false;
         }
-
         if (!pass) return false;
       }
-
       return true;
     });
   }
-
   toggleExpand(grantId: number) {
     if (this.expandedGrantId === grantId) {
       this.expandedGrantId = null;

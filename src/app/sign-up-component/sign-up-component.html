@@ -1,127 +1,148 @@
-<section class="hero">
-    <div class="hero-content">
-    <h1>Join Us</h1>
+<section class="page-hero">
+    <div class="page-container">
+        <div class="hero-content">
+            <h1>Join Us</h1>
 
-    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
-        <div class="form-card">
-            <section>
-                <h2>Account Info</h2>
-                
-                <input 
-                  type="text" 
-                  formControlName="username"
-                  placeholder="Username" 
-                  required
-                  [class.invalid-input]="username?.invalid && username?.touched"
-                >
-                <div class="field-error" *ngIf="username?.touched && username?.invalid">
-                  <span *ngIf="username?.errors?.['required']">Username is required.</span>
-                  <span *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters.</span>
+            <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+                <div class="page-section">
+                    <section class="form-section">
+                        <h2>Account Info</h2>
+                        
+                        <div class="input-group">
+                            <input 
+                              type="text" 
+                              formControlName="username"
+                              placeholder="Username" 
+                              class="input-standard"
+                              [class.invalid-input]="username?.invalid && username?.touched"
+                            >
+                            <div class="field-error" *ngIf="username?.touched && username?.invalid">
+                                <span *ngIf="username?.errors?.['required']">Username is required.</span>
+                                <span *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="email" 
+                              formControlName="email"
+                              placeholder="Email" 
+                              class="input-standard"
+                              [class.invalid-input]="email?.invalid && email?.touched"
+                            >
+                            <div class="field-error" *ngIf="email?.touched && email?.invalid">
+                                <span *ngIf="email?.errors?.['required']">Email is required.</span>
+                                <span *ngIf="email?.errors?.['email']">Please enter a valid email.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="password" 
+                              formControlName="password"
+                              placeholder="Password" 
+                              class="input-standard"
+                              [class.invalid-input]="password?.invalid && password?.touched"
+                            >
+                            <div class="field-error" *ngIf="password?.touched && password?.invalid">
+                                <span *ngIf="password?.errors?.['required']">Password is required.</span>
+                                <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="password" 
+                              formControlName="passwordConfirm"
+                              placeholder="Repeat your password" 
+                              class="input-standard"
+                              [class.invalid-input]="passwordConfirm?.invalid && passwordConfirm?.touched"
+                            >
+                            <div class="field-error" *ngIf="passwordConfirm?.touched && passwordConfirm?.invalid">
+                                <span *ngIf="passwordConfirm?.errors?.['required']">Password confirmation is required.</span>
+                            </div>
+                            <div class="field-error" *ngIf="signUpForm.errors?.['passwordMismatch'] && passwordConfirm?.touched">
+                                <span>Passwords do not match.</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <h2>Personal Info</h2>
+                        
+                        <div class="input-group">
+                            <input 
+                              type="text" 
+                              formControlName="firstName"
+                              placeholder="Name" 
+                              class="input-standard"
+                              [class.invalid-input]="firstName?.invalid && firstName?.touched"
+                            >
+                            <div class="field-error" *ngIf="firstName?.touched && firstName?.invalid">
+                                <span *ngIf="firstName?.errors?.['required']">Name is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="text" 
+                              formControlName="surname"
+                              placeholder="Surname" 
+                              class="input-standard"
+                              [class.invalid-input]="surname?.invalid && surname?.touched"
+                            >
+                            <div class="field-error" *ngIf="surname?.touched && surname?.invalid">
+                                <span *ngIf="surname?.errors?.['required']">Surname is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="text" 
+                              formControlName="secondSurname"
+                              placeholder="Second Surname (Optional)"
+                              class="input-standard"
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="text" 
+                              formControlName="documentNumber"
+                              placeholder="Document Number (DNI/NIE)" 
+                              class="input-standard"
+                              [class.invalid-input]="signUpForm.get('documentNumber')?.invalid && signUpForm.get('documentNumber')?.touched"
+                            >
+                            <div class="field-error" *ngIf="signUpForm.get('documentNumber')?.touched && signUpForm.get('documentNumber')?.invalid">
+                                <span *ngIf="signUpForm.get('documentNumber')?.errors?.['required']">Document Number is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input 
+                              type="date" 
+                              formControlName="birthDate"
+                              placeholder="Birth Date" 
+                              class="input-standard"
+                              [class.invalid-input]="signUpForm.get('birthDate')?.invalid && signUpForm.get('birthDate')?.touched"
+                            >
+                            <div class="field-error" *ngIf="signUpForm.get('birthDate')?.touched && signUpForm.get('birthDate')?.invalid">
+                                <span *ngIf="signUpForm.get('birthDate')?.errors?.['required']">Birth Date is required.</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+                    <div class="success-message" *ngIf="successMessage">{{ successMessage }}</div>
                 </div>
 
-                <input 
-                  type="email" 
-                  formControlName="email"
-                  placeholder="Email" 
-                  required
-                  [class.invalid-input]="email?.invalid && email?.touched"
-                >
-                <div class="field-error" *ngIf="email?.touched && email?.invalid">
-                  <span *ngIf="email?.errors?.['required']">Email is required.</span>
-                  <span *ngIf="email?.errors?.['email']">Please enter a valid email.</span>
+                <div class="button-group">
+                    <button type="submit" class="btn-pill btn-highlight" [disabled]="isLoading || !signUpForm.valid">
+                        {{ isLoading ? 'Signing Up...' : 'Sign Up' }}
+                    </button>
+                    <button type="button" class="btn-signup" routerLink="/login">Log in using an existing account</button>
                 </div>
-
-                <input 
-                  type="password" 
-                  formControlName="password"
-                  placeholder="Password" 
-                  required
-                  [class.invalid-input]="password?.invalid && password?.touched"
-                >
-                <div class="field-error" *ngIf="password?.touched && password?.invalid">
-                  <span *ngIf="password?.errors?.['required']">Password is required.</span>
-                  <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters.</span>
-                </div>
-
-                <input 
-                  type="password" 
-                  formControlName="passwordConfirm"
-                  placeholder="Repeat your password" 
-                  required
-                  [class.invalid-input]="passwordConfirm?.invalid && passwordConfirm?.touched"
-                >
-                <div class="field-error" *ngIf="passwordConfirm?.touched && passwordConfirm?.invalid">
-                  <span *ngIf="passwordConfirm?.errors?.['required']">Password confirmation is required.</span>
-                </div>
-                <div class="field-error" *ngIf="signUpForm.errors?.['passwordMismatch'] && passwordConfirm?.touched">
-                  <span>Passwords do not match.</span>
-                </div>
-            </section>
-
-            <section>
-                <h2>Personal Info</h2>
-                
-                <input 
-                  type="text" 
-                  formControlName="firstName"
-                  placeholder="Name" 
-                  required
-                  [class.invalid-input]="firstName?.invalid && firstName?.touched"
-                >
-                <div class="field-error" *ngIf="firstName?.touched && firstName?.invalid">
-                  <span *ngIf="firstName?.errors?.['required']">Name is required.</span>
-                </div>
-
-                <input 
-                  type="text" 
-                  formControlName="surname"
-                  placeholder="Surname" 
-                  required
-                  [class.invalid-input]="surname?.invalid && surname?.touched"
-                >
-                <div class="field-error" *ngIf="surname?.touched && surname?.invalid">
-                  <span *ngIf="surname?.errors?.['required']">Surname is required.</span>
-                </div>
-
-                <input 
-                  type="text" 
-                  formControlName="secondSurname"
-                  placeholder="Second Surname (Optional)"
-                >
-
-                <input 
-                  type="text" 
-                  formControlName="documentNumber"
-                  placeholder="Document Number (DNI/NIE)" 
-                  required
-                  [class.invalid-input]="signUpForm.get('documentNumber')?.invalid && signUpForm.get('documentNumber')?.touched"
-                >
-                <div class="field-error" *ngIf="signUpForm.get('documentNumber')?.touched && signUpForm.get('documentNumber')?.invalid">
-                  <span *ngIf="signUpForm.get('documentNumber')?.errors?.['required']">Document Number is required.</span>
-                </div>
-
-                <input 
-                  type="date" 
-                  formControlName="birthDate"
-                  placeholder="Birth Date" 
-                  required
-                  [class.invalid-input]="signUpForm.get('birthDate')?.invalid && signUpForm.get('birthDate')?.touched"
-                >
-                <div class="field-error" *ngIf="signUpForm.get('birthDate')?.touched && signUpForm.get('birthDate')?.invalid">
-                  <span *ngIf="signUpForm.get('birthDate')?.errors?.['required']">Birth Date is required.</span>
-                </div>
-            </section>
-
-            <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-            <div class="success-message" *ngIf="successMessage">{{ successMessage }}</div>
+            </form>
         </div>
-
-        <div class="button-group">
-            <button type="submit" class="btn-signup" [disabled]="isLoading || !signUpForm.valid">
-              {{ isLoading ? 'Signing Up...' : 'Sign Up' }}
-            </button>
-            <button type="button" class="btn-login" routerLink="/login">Log in using an existing account</button>
-        </div>
-    </form>
     </div>
 </section>

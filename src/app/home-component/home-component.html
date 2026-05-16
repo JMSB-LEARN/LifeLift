@@ -1,9 +1,11 @@
-<section class="hero">
+<section class="page-hero">
     <div class="hero-content">
         <h1 *ngIf="!isLoggedIn">Bienvenido a LifeLift</h1>
         <h1 *ngIf="isLoggedIn">Bienvenido de nuevo, {{ currentUser?.username || currentUser?.first_name }}!</h1>
+        
         <p>Empoderando tu viaje con confianza y apoyo.</p>
-        <nav>
+        
+        <nav style="margin-top: var(--spacing-lg);">
             <a class="cta-button" routerLink="/login" *ngIf="!isLoggedIn">Empieza ya</a>
             <a class="cta-button" routerLink="/profile" *ngIf="isLoggedIn">Mi perfil</a>
         </nav>

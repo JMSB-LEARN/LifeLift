@@ -1,23 +1,14 @@
+/* --- CONFIG & RESPONSIVE LOGIC --- */
 :root {
-    /* Color Palette */
     --primary-color: #003288;
-    /* Soft Blue */
     --secondary-color: #008b5d;
-    /* Emerald Green */
     --background-color: #f9fafbfb;
-    /* Grayish White */
     --surface-color: #f9fafbfb;
-    /* Pure White */
     --text-main: #111827;
-    /* Dark Gray */
     --text-secondary: #6B7280;
-    /* Medium Gray */
     --highlight-color: #FACC15;
-    /* Warm Yellow */
     --alert-color: #F59E0B;
-    /* Amber */
     --error-color: #EF4444;
-    /* Red */
 
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
@@ -25,20 +16,31 @@
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
+
+    --font-family-base: system-ui, -apple-system, sans-serif;
     --font-size-sm: 0.875rem;
-
-
-    --font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-size-base: 1rem;
     --font-size-lg: 1.125rem;
     --font-size-xl: 1.25rem;
     --font-size-2xl: 1.5rem;
     --font-size-3xl: 1.875rem;
 
-    --windows-max-width: 1200px;
+    --windows-max-width: 100%; 
 }
 
+@media (min-width: 768px) {
+    :root { --windows-max-width: 720px; }
+}
 
+@media (min-width: 1024px) {
+    :root { --windows-max-width: 960px; }
+}
+
+@media (min-width: 1280px) {
+    :root { --windows-max-width: 1200px; }
+}
+
+/* --- RESET --- */
 *,
 *::before,
 *::after {
@@ -49,7 +51,7 @@
 
 body {
     font-family: var(--font-family-base);
-    background-color: var(--background-color);
+    background: var(--background-color);
     color: var(--text-main);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -58,7 +60,7 @@ body {
 a {
     text-decoration: none;
     color: inherit;
-    transition: color 0.2s ease;
+    transition: color 0.2s;
 }
 
 ul {
@@ -70,8 +72,9 @@ button {
     font-family: inherit;
 }
 
+/* --- COMPONENTS --- */
 .container {
-    max-width: 1200px;
+    max-width: var(--windows-max-width);
     margin: 0 auto;
     padding: 0 var(--spacing-md);
 }
@@ -79,10 +82,13 @@ button {
 .page-hero {
     background: linear-gradient(200deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: var(--surface-color);
-    padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-2xl);
+    padding: var(--spacing-2xl) var(--spacing-md);
     text-align: center;
     padding-top: 6vh;
     min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .page-hero h1 {
@@ -95,12 +101,10 @@ button {
     font-size: var(--font-size-lg);
     opacity: 0.9;
 }
-
 .page-container {
+    width: 100%; 
     max-width: var(--windows-max-width);
     margin: -5rem auto 0;
-    padding: 0 var(--spacing-md) 8rem;
-    color: var(--text-main);
     position: relative;
     z-index: 10;
 }
@@ -108,11 +112,11 @@ button {
 .page-section {
     background: var(--surface-color);
     border-radius: 8px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     padding: var(--spacing-xl);
     margin-top: 5vh;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .page-section:hover {
@@ -120,10 +124,94 @@ button {
 }
 
 .page-section h2 {
-    margin: 0 0 var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
     color: var(--primary-color);
     font-size: var(--font-size-xl);
     font-weight: 800;
     border-bottom: 2px solid var(--background-color);
     padding-bottom: var(--spacing-sm);
+}
+
+.hero-shared {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--surface-color);
+    padding: var(--spacing-2xl) var(--spacing-md);
+    text-align: center;
+    min-height: 84vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-shared h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+}
+
+.btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-primary { background: var(--primary-color); color: white; }
+.btn-highlight { background: var(--highlight-color); color: var(--text-main); }
+.btn-secondary { background: #e5e7eb; color: #374151; }
+
+.btn-pill:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.input-standard {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.invalid-input { border-color: #c46a6f; background-color: #f7d7d8; }
+.field-error { color: #7a252a; font-size: 0.9rem; }
+
+.grid-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.action-card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+
+/* --- MOBILE OVERRIDES --- */
+@media (max-width: 767px) {
+    .page-hero {
+        min-height: 50vh;
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .page-hero h1 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .page-container {
+        margin-top: -2rem;
+    }
 }
