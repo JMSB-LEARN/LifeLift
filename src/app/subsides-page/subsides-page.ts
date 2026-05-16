@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { api } from '../api/ApiClient';
+import CommentsService from '../api/CommentsService';
+import { GrantComment } from '../api/models';
 
 @Component({
   selector: 'app-subsides-page',
@@ -28,6 +30,12 @@ export class SubsidesPage implements OnInit {
 
   expandedGrantId: number | null = null;
   loading = true;
+
+  // Comentarios state
+  comments: GrantComment[] = [];
+  newCommentText: string = '';
+  replyTexts: { [commentId: number]: string } = {};
+  replyingToId: number | null = null;
 
   constructor(private route: ActivatedRoute) { }
   
@@ -99,11 +107,94 @@ export class SubsidesPage implements OnInit {
       return true;
     });
   }
-  toggleExpand(grantId: number) {
+  async toggleExpand(grantId: number) {
     if (this.expandedGrantId === grantId) {
       this.expandedGrantId = null;
+      this.comments = [];
+      this.newCommentText = '';
+      this.replyingToId = null;
     } else {
       this.expandedGrantId = grantId;
+      await this.loadComments(grantId);
+    }
+  }
+
+  async loadComments(grantId: number) {
+    try {
+      const flatComments = await CommentsService.getComments(grantId);
+      this.comments = this.buildCommentTree(flatComments);
+    } catch (err) {
+      console.error('Error cargando comentarios', err);
+    }
+  }
+
+  buildCommentTree(flatComments: GrantComment[]): GrantComment[] {
+    const commentMap = new Map<number, GrantComment>();
+    const roots: GrantComment[] = [];
+
+    // Initialize
+    flatComments.forEach(c => {
+      c.replies = [];
+      commentMap.set(c.id, c);
+    });
+
+    // Build tree
+    flatComments.forEach(c => {
+      if (c.parent_id && commentMap.has(c.parent_id)) {
+        commentMap.get(c.parent_id)!.replies!.push(c);
+      } else {
+        roots.push(c);
+      }
+    });
+
+    return roots;
+  }
+
+  async postComment() {
+    if (!this.expandedGrantId || !this.newCommentText.trim()) return;
+    try {
+      await CommentsService.addComment(this.expandedGrantId, this.newCommentText);
+      this.newCommentText = '';
+      await this.loadComments(this.expandedGrantId);
+    } catch (err) {
+      console.error('Error publicando comentario', err);
+      alert('Error publicando comentario');
+    }
+  }
+
+  toggleReply(commentId: number) {
+    if (this.replyingToId === commentId) {
+      this.replyingToId = null;
+    } else {
+      this.replyingToId = commentId;
+      if (!this.replyTexts[commentId]) {
+        this.replyTexts[commentId] = '';
+      }
+    }
+  }
+
+  async postReply(parentId: number) {
+    if (!this.expandedGrantId || !this.replyTexts[parentId]?.trim()) return;
+    try {
+      await CommentsService.addComment(this.expandedGrantId, this.replyTexts[parentId], parentId);
+      this.replyTexts[parentId] = '';
+      this.replyingToId = null;
+      await this.loadComments(this.expandedGrantId);
+    } catch (err) {
+      console.error('Error publicando respuesta', err);
+      alert('Error publicando respuesta');
+    }
+  }
+
+  async reportComment(commentId: number) {
+    if (confirm('¿Estás seguro de que quieres reportar este comentario?')) {
+      try {
+        await CommentsService.reportComment(commentId);
+        alert('Comentario reportado');
+      } catch (err) {
+        console.error('Error reportando comentario', err);
+        alert('Error reportando comentario');
+      }
     }
   }
 

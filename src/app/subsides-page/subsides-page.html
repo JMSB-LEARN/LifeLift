@@ -45,9 +45,7 @@
                 [class.expanded]="expandedGrantId === grant.id">
                 <div class="grant-header" (click)="toggleExpand(grant.id)">
                     <div class="grant-title-group">
-                        <span class="status-badge" *ngIf="isApplied(grant.id)" [ngClass]="getDocumentStatus(grant.id).replace(' ', '-')">
-                            {{ getDocumentStatus(grant.id) }}
-                        </span>
+                        <span class="status-badge" *ngIf="isApplied(grant.id)">Aplicada</span>
                         <h3>{{ grant.title }}</h3>
                     </div>
                     <button class="expand-btn">{{ expandedGrantId === grant.id ? '▲' : '▼' }}</button>
@@ -83,8 +81,14 @@
                             </div>
 
                             <!-- Estado de revisión del documento -->
-                            <div class="document-review-status" *ngIf="isApplied(grant.id) && getAdminComments(grant.id)">
-                                <div class="admin-comments-box">
+                            <div class="document-review-status" *ngIf="isApplied(grant.id)">
+                                <div class="status-header">
+                                    <strong>Estado de Revisión:</strong>
+                                    <span class="status-badge" [ngClass]="getDocumentStatus(grant.id).replace(' ', '-')">
+                                        {{ getDocumentStatus(grant.id) }}
+                                    </span>
+                                </div>
+                                <div class="admin-comments-box" *ngIf="getAdminComments(grant.id)">
                                     <strong>Comentarios del Administrador:</strong>
                                     <p>{{ getAdminComments(grant.id) }}</p>
                                 </div>
@@ -101,8 +105,58 @@
                                     />
                                 </label>
                             </div>
+                    </div>
+
+                    <!-- SECCIÓN DE COMENTARIOS -->
+                    <div class="comments-section">
+                        <h4>Comentarios</h4>
+                        <div class="comments-list">
+                            <div class="comment-thread" *ngFor="let comment of comments">
+                                <!-- Comentario principal -->
+                                <div class="comment-card">
+                                    <div class="comment-body">
+                                        <strong>{{ comment.first_name }} {{ comment.surname }}:</strong>
+                                        <span>{{ comment.comment_text }}</span>
+                                    </div>
+                                    <div class="comment-actions">
+                                        <button class="btn-icon" (click)="toggleReply(comment.id)" title="Responder">
+                                            <i class="fa fa-reply"></i> ↩
+                                        </button>
+                                        <button class="btn-icon text-danger" (click)="reportComment(comment.id)" title="Reportar">
+                                            <i class="fa fa-flag"></i> 🚩
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Input para responder al comentario principal -->
+                                <div class="reply-input-box" *ngIf="replyingToId === comment.id">
+                                    <input type="text" [(ngModel)]="replyTexts[comment.id]" placeholder="Escribe tu respuesta..." />
+                                    <button class="btn-primary btn-small" (click)="postReply(comment.id)">Enviar</button>
+                                </div>
+
+                                <!-- Respuestas (indentadas) -->
+                                <div class="replies-list" *ngIf="comment.replies && comment.replies.length > 0">
+                                    <div class="comment-card reply-card" *ngFor="let reply of comment.replies">
+                                        <div class="comment-body">
+                                            <strong>{{ reply.first_name }} {{ reply.surname }}:</strong>
+                                            <span>{{ reply.comment_text }}</span>
+                                        </div>
+                                        <div class="comment-actions">
+                                            <button class="btn-icon text-danger" (click)="reportComment(reply.id)" title="Reportar">
+                                                <i class="fa fa-flag"></i> 🚩
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="new-comment-box">
+                            <input type="text" [(ngModel)]="newCommentText" placeholder="Añade un comentario..." />
+                            <button class="btn-primary" (click)="postComment()">Comentar</button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

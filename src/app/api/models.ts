@@ -121,3 +121,18 @@ export interface GrantMatch {
   reasons?: any | null;
   calculated_at: string;
 }
+
+export interface GrantComment {
+  id: number;
+  grant_id: number;
+  user_id: number;
+  parent_id?: number | null;
+  comment_text: string;
+  reports_count: number;
+  created_at: string;
+  first_name?: string;
+  surname?: string;
+  
+  // Para frontend anidamiento
+  replies?: GrantComment[];
+}
