@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { api } from '../api/ApiClient';
 import CommentsService from '../api/CommentsService';
+import AuthService from '../api/AuthService';
 import { GrantComment } from '../api/models';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -24,6 +24,7 @@ export class SubsidesPage implements OnInit {
   hideApplied = false;
   showOnlyApplied = false;
   generatingPdf = false;
+  isLoggedIn = false;
 
   // Filtros Manuales
   filterUnemployment = false;
@@ -48,6 +49,11 @@ export class SubsidesPage implements OnInit {
 
 
   async ngOnInit() {
+    this.isLoggedIn = AuthService.isLoggedIn();
+    if (!this.isLoggedIn) {
+      this.showOnlyQualified = false;
+    }
+
     this.route.queryParams.subscribe(params => {
       if (params['filter'] === 'unemployment') {
         this.showOnlyQualified = false;
@@ -156,6 +162,10 @@ export class SubsidesPage implements OnInit {
   }
 
   async postComment() {
+    if (!this.isLoggedIn) {
+      alert('Debes estar registrado e iniciar sesión para comentar.');
+      return;
+    }
     if (!this.expandedGrantId || !this.newCommentText.trim()) return;
     try {
       await CommentsService.addComment(this.expandedGrantId, this.newCommentText);
@@ -179,6 +189,10 @@ export class SubsidesPage implements OnInit {
   }
 
   async postReply(parentId: number) {
+    if (!this.isLoggedIn) {
+      alert('Debes estar registrado e iniciar sesión para responder.');
+      return;
+    }
     if (!this.expandedGrantId || !this.replyTexts[parentId]?.trim()) return;
     try {
       await CommentsService.addComment(this.expandedGrantId, this.replyTexts[parentId], parentId);
@@ -208,6 +222,10 @@ export class SubsidesPage implements OnInit {
   }
 
   async markAsApplied(grantId: number) {
+    if (!this.isLoggedIn) {
+      alert('Debes registrarte e iniciar sesión para solicitar una ayuda.');
+      return;
+    }
     try {
       const res = await api.client.post('/applications', {
         grant_id: grantId,

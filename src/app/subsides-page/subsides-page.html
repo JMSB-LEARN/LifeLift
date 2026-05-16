@@ -9,9 +9,9 @@
                     class="search-input" />
             </div>
             
-            <label class="checkbox-container label-bold mb-10">
-                <input type="checkbox" [(ngModel)]="showOnlyQualified" name="showOnlyQualified" />
-                Ver ayudas a las que califico
+            <label class="checkbox-container label-bold mb-10" [class.text-disabled]="!isLoggedIn">
+                <input type="checkbox" [(ngModel)]="showOnlyQualified" name="showOnlyQualified" [disabled]="!isLoggedIn" />
+                Solo ver las ayudas a las que califico <span *ngIf="!isLoggedIn" class="login-hint">(Requiere registro)</span>
             </label>
 
             <label class="checkbox-container mb-10">
@@ -128,7 +128,7 @@
                                         <span [class.text-deleted]="comment.is_deleted">{{ comment.comment_text }}</span>
                                     </div>
                                     <div class="comment-actions" *ngIf="!comment.is_deleted">
-                                        <button class="btn-icon" (click)="toggleReply(comment.id)" title="Responder">
+                                        <button class="btn-icon" *ngIf="isLoggedIn" (click)="toggleReply(comment.id)" title="Responder">
                                             <i class="fa fa-reply"></i> ↩
                                         </button>
                                         <button class="btn-icon text-danger" (click)="reportComment(comment.id)" title="Reportar">
@@ -160,9 +160,12 @@
                             </div>
                         </div>
 
-                        <div class="new-comment-box">
+                        <div class="new-comment-box" *ngIf="isLoggedIn">
                             <input type="text" [(ngModel)]="newCommentText" placeholder="Añade un comentario..." />
                             <button class="btn-primary" (click)="postComment()">Comentar</button>
+                        </div>
+                        <div class="login-prompt-box" *ngIf="!isLoggedIn">
+                            <p>Regístrate o inicia sesión para participar en los comentarios.</p>
                         </div>
                     </div>
 
