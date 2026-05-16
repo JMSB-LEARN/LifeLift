@@ -39,6 +39,12 @@ p, a {
     margin: 0;
 }
 
+a {
+    color: var(--highlight-color);
+    text-decoration: underline;
+    font-weight: 800;
+}
+
 .footer-bottom {
     text-align: center;
     margin-top: var(--spacing-xs);

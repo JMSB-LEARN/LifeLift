@@ -25,6 +25,7 @@
     align-items: center;
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+    color: var(--surface-color);
 }
 
 .profile-header h1 {
@@ -84,17 +85,7 @@ button[type="button"]:hover {
     flex-direction: column;
 }
 
-.profile-page label,
-.profile-page input,
-.profile-page select,
-.profile-page button,
-.profile-page th,
-.profile-page td,
-.profile-page p,
-.profile-page h2,
-.profile-page h3 {
-    color: var(--text-main);
-}
+
 
 .profile-section {
     background: var(--surface-color);

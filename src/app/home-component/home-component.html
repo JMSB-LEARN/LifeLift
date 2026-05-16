@@ -1,13 +1,45 @@
 <section class="page-hero">
-    <div class="hero-content">
-        <h1 *ngIf="!isLoggedIn">Bienvenido a LifeLift</h1>
-        <h1 *ngIf="isLoggedIn">Bienvenido de nuevo, {{ currentUser?.username || currentUser?.first_name }}!</h1>
-        
-        <p>Empoderando tu viaje con confianza y apoyo.</p>
-        
-        <nav style="margin-top: var(--spacing-lg);">
-            <a class="cta-button" routerLink="/login" *ngIf="!isLoggedIn">Empieza ya</a>
-            <a class="cta-button" routerLink="/profile" *ngIf="isLoggedIn">Mi perfil</a>
-        </nav>
+    <div class="page-container">
+        <div class="hero-content">
+            <h1 *ngIf="!isLoggedIn">Bienvenido a LifeLift</h1>
+            <h1 *ngIf="isLoggedIn">Bienvenido de nuevo, {{ currentUser?.username || currentUser?.first_name }}!</h1>
+            
+            <p>Empoderando tu viaje con confianza y apoyo.</p>
+            
+            <nav style="margin-top: var(--spacing-xl);">
+                <a class="btn-pill btn-highlight" routerLink="/login" *ngIf="!isLoggedIn">Empieza ya</a>
+                <a class="btn-pill btn-highlight" routerLink="/profile" *ngIf="isLoggedIn">Mi perfil</a>
+            </nav>
+        </div>
+
+        <div class="page-section home-features">
+            <h2>Nuestros Servicios</h2>
+            <div class="grid-auto-fit">
+                <div class="feature-card">
+                    <div class="feature-image-placeholder">
+                        <img src="/media/subsidios-thumb.jpg" alt="Subsidios y Ayudas" class="feature-img" />
+                    </div>
+                    <h3>Gestión de Subsidios</h3>
+                    <p>Encuentra y solicita de forma simplificada todas las ayudas públicas disponibles para ti y tu entorno familiar.</p>
+                    <a class="btn-pill btn-secondary" routerLink="/subsidies">Explorar ayudas</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-image-placeholder">
+                        <img src="/media/soporte-thumb.jpg" alt="Soporte Personalizado" class="feature-img" />
+                    </div>
+                    <h3>Soporte Personalizado</h3>
+                    <p>Un espacio seguro diseñado para guiarte paso a paso en tus trámites diarios con total confianza.</p>
+                    <a class="btn-pill btn-secondary" routerLink="/about">Saber más</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-section text-left">
+            <h2>Sobre LifeLift</h2>
+            <p class="home-description">
+                LifeLift es una plataforma integral creada para centralizar, organizar y facilitar el acceso a la información y documentación esencial de los ciudadanos. Nuestro objetivo es romper las barreras burocráticas y ofrecerte una experiencia fluida, intuitiva y accesible desde cualquier dispositivo.
+            </p>
+        </div>
     </div>
 </section>
