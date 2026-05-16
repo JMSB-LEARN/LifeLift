@@ -132,6 +132,8 @@ export interface GrantComment {
   created_at: string;
   first_name?: string;
   surname?: string;
+  is_deleted?: boolean;
+  grant_title?: string;
   
   // Para frontend anidamiento
   replies?: GrantComment[];

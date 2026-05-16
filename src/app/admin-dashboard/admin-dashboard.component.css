@@ -203,6 +203,111 @@ textarea.form-control {
   background-color: #2563eb;
 }
 
+.submit-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Tabs */
+.admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* Reported Comments */
+.comments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.comment-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.comment-header h4 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.1rem;
+}
+
+.report-badge {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.comment-author {
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.comment-date {
+    display: block;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin-top: 0.25rem;
+}
+
+.comment-text-box {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 6px;
+    color: #374151;
+    font-style: italic;
+    border-left: 3px solid #d1d5db;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.comment-actions button {
+    flex: 1;
+}
+
 .btn-primary:disabled {
   opacity: 0.7;
   cursor: not-allowed;

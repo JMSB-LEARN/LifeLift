@@ -1,69 +1,104 @@
 <div class="admin-dashboard">
-    <h2>Panel de Administración de Documentos</h2>
-    <p class="subtitle">Revisión de solicitudes y estado de documentos enviados por los usuarios.</p>
+    <h2>Panel de Administración</h2>
+    <p class="subtitle">Revisión de solicitudes y moderación de comentarios.</p>
+  
+    <div class="admin-tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'applications'" (click)="switchTab('applications')">Solicitudes de Documentos</button>
+      <button class="tab-btn" [class.active]="activeTab === 'comments'" (click)="switchTab('comments')">Comentarios Reportados</button>
+    </div>
   
     <div *ngIf="loading" class="loading-state">
       Cargando solicitudes...
     </div>
   
-    <div *ngIf="!loading && applications.length === 0" class="empty-state">
-      No hay solicitudes de usuarios en este momento.
-    </div>
-  
-    <div class="dashboard-layout" *ngIf="!loading && applications.length > 0">
-      <!-- Lista de solicitudes -->
-      <div class="applications-list">
-        <div class="app-card" *ngFor="let app of applications" [class.selected]="selectedApp?.id === app.id" (click)="selectApplication(app)">
-          <div class="app-header">
-            <h3>{{app.first_name}} {{app.surname}} {{app.second_surname}}</h3>
-            <span class="status-badge" [ngClass]="(app.document_status || 'Pending').replace(' ', '-')">
-              {{app.document_status || 'Pending'}}
-            </span>
-          </div>
-          <p class="app-detail"><strong>Documento ID:</strong> {{app.document_type}} {{app.document_number}}</p>
-          <p class="app-detail"><strong>Fecha Envío:</strong> {{app.created_at | date:'short'}}</p>
-          <p class="app-detail"><strong>Archivo:</strong> {{app.has_document ? app.document_name : 'No adjunto'}}</p>
-        </div>
+    <!-- CONTENIDO PESTAÑA: SOLICITUDES -->
+    <div *ngIf="activeTab === 'applications'">
+      <div *ngIf="!loading && applications.length === 0" class="empty-state">
+        No hay solicitudes de usuarios en este momento.
       </div>
-  
-      <!-- Panel de edición lateral -->
-      <div class="editor-panel" *ngIf="selectedApp">
-        <div class="editor-header">
-          <h3>Revisar Documento</h3>
-          <button class="btn-close" (click)="closeEditor()">&times;</button>
+    
+      <div class="dashboard-layout" *ngIf="!loading && applications.length > 0">
+        <!-- Lista de solicitudes -->
+        <div class="applications-list">
+          <div class="app-card" *ngFor="let app of applications" [class.selected]="selectedApp?.id === app.id" (click)="selectApplication(app)">
+            <div class="app-header">
+              <h3>{{app.first_name}} {{app.surname}} {{app.second_surname}}</h3>
+              <span class="status-badge" [ngClass]="(app.document_status || 'Pending').replace(' ', '-')">
+                {{app.document_status || 'Pending'}}
+              </span>
+            </div>
+            <p class="app-detail"><strong>Documento ID:</strong> {{app.document_type}} {{app.document_number}}</p>
+            <p class="app-detail"><strong>Fecha Envío:</strong> {{app.created_at | date:'short'}}</p>
+            <p class="app-detail"><strong>Archivo:</strong> {{app.has_document ? app.document_name : 'No adjunto'}}</p>
+          </div>
         </div>
-        
-        <div class="editor-content">
-          <p><strong>Usuario:</strong> {{selectedApp.first_name}} {{selectedApp.surname}}</p>
+    
+        <!-- Panel de edición lateral -->
+        <div class="editor-panel" *ngIf="selectedApp">
+          <div class="editor-header">
+            <h3>Revisar Documento</h3>
+            <button class="btn-close" (click)="closeEditor()">&times;</button>
+          </div>
           
-          <div class="document-section" *ngIf="selectedApp.has_document">
-            <p><strong>Archivo subido:</strong> {{selectedApp.document_name}}</p>
-            <button class="btn-primary" (click)="downloadDocument(selectedApp.id, selectedApp.document_name)">
-              Descargar / Ver PDF
+          <div class="editor-content">
+            <p><strong>Usuario:</strong> {{selectedApp.first_name}} {{selectedApp.surname}}</p>
+            
+            <div class="document-section" *ngIf="selectedApp.has_document">
+              <p><strong>Archivo subido:</strong> {{selectedApp.document_name}}</p>
+              <button class="btn-primary" (click)="downloadDocument(selectedApp.id, selectedApp.document_name)">
+                Descargar / Ver PDF
+              </button>
+            </div>
+            <div class="document-section empty" *ngIf="!selectedApp.has_document">
+              <p>El usuario no ha subido ningún documento aún.</p>
+            </div>
+    
+            <div class="form-group">
+              <label for="statusSelect">Estado del Documento:</label>
+              <select id="statusSelect" [(ngModel)]="selectedApp.document_status" class="form-control">
+                <option *ngFor="let opt of statusOptions" [value]="opt">{{opt}}</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label for="adminComments">Comentarios (visible para el usuario):</label>
+              <textarea id="adminComments" [(ngModel)]="selectedApp.admin_comments" rows="5" class="form-control" placeholder="Escribe aquí las correcciones necesarias o la razón por la que el documento está incompleto..."></textarea>
+            </div>
+          </div>
+    
+          <div class="editor-actions">
+            <button class="btn-secondary" (click)="closeEditor()">Cancelar</button>
+            <button class="btn-primary submit-btn" (click)="saveStatus()" [disabled]="saving">
+              {{saving ? 'Guardando...' : 'Guardar Cambios'}}
             </button>
           </div>
-          <div class="document-section empty" *ngIf="!selectedApp.has_document">
-            <p>El usuario no ha subido ningún documento aún.</p>
-          </div>
-  
-          <div class="form-group">
-            <label for="statusSelect">Estado del Documento:</label>
-            <select id="statusSelect" [(ngModel)]="selectedApp.document_status" class="form-control">
-              <option *ngFor="let opt of statusOptions" [value]="opt">{{opt}}</option>
-            </select>
-          </div>
-  
-          <div class="form-group">
-            <label for="adminComments">Comentarios (visible para el usuario):</label>
-            <textarea id="adminComments" [(ngModel)]="selectedApp.admin_comments" rows="5" class="form-control" placeholder="Escribe aquí las correcciones necesarias o la razón por la que el documento está incompleto..."></textarea>
-          </div>
         </div>
-  
-        <div class="editor-actions">
-          <button class="btn-secondary" (click)="closeEditor()">Cancelar</button>
-          <button class="btn-primary submit-btn" (click)="saveStatus()" [disabled]="saving">
-            {{saving ? 'Guardando...' : 'Guardar Cambios'}}
-          </button>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PESTAÑA: COMENTARIOS -->
+    <div *ngIf="activeTab === 'comments'">
+      <div *ngIf="!loading && reportedComments.length === 0" class="empty-state">
+        No hay comentarios reportados pendientes de revisión.
+      </div>
+
+      <div class="comments-grid" *ngIf="!loading && reportedComments.length > 0">
+        <div class="comment-card" *ngFor="let comment of reportedComments">
+          <div class="comment-header">
+            <h4>Ayuda: {{ comment.grant_title }}</h4>
+            <span class="report-badge">{{ comment.reports_count }} reportes</span>
+          </div>
+          <div class="comment-author">
+            <strong>Usuario:</strong> {{ comment.first_name }} {{ comment.surname }}
+            <span class="comment-date">{{ comment.created_at | date:'short' }}</span>
+          </div>
+          <div class="comment-text-box">
+            "{{ comment.comment_text }}"
+          </div>
+          <div class="comment-actions">
+            <button class="btn-primary" (click)="dismissReports(comment.id)">Ignorar Reportes</button>
+            <button class="btn-danger" (click)="deleteComment(comment.id)">Eliminar Comentario</button>
+          </div>
         </div>
       </div>
     </div>

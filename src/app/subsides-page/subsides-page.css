@@ -270,3 +270,13 @@
     font-family: inherit;
 }
 
+/* Comentarios Eliminados */
+.comment-deleted {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
+.text-deleted {
+    font-style: italic;
+    color: #9ca3af;
+}

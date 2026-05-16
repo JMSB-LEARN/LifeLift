@@ -24,9 +24,22 @@ class AdminService {
   /**
    * Obtiene el documento PDF de una solicitud para visualización
    */
-  async getApplicationDocument(id: number): Promise<string> {
-    const { data } = await api.client.get<{ document_pdf: string }>(`/admin/applications/${id}/document`);
-    return data.document_pdf;
+  async getApplicationDocument(applicationId: number): Promise<{ document_name: string, document_pdf: string }> {
+    const { data } = await api.client.get<{ document_name: string, document_pdf: string }>(`/admin/applications/${applicationId}/document`);
+    return data;
+  }
+
+  async getReportedComments(): Promise<any[]> {
+    const { data } = await api.client.get<any[]>('/admin/comments/reported');
+    return data;
+  }
+
+  async deleteComment(commentId: number): Promise<void> {
+    await api.client.put(`/admin/comments/${commentId}/delete`);
+  }
+
+  async dismissCommentReports(commentId: number): Promise<void> {
+    await api.client.put(`/admin/comments/${commentId}/dismiss-reports`);
   }
 }
 

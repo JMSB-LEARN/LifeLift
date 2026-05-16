@@ -15,9 +15,11 @@ import { UserApplication } from '../api/models';
 })
 export class AdminDashboardComponent implements OnInit {
   applications: any[] = [];
+  reportedComments: any[] = [];
   selectedApp: any = null;
   loading = true;
   saving = false;
+  activeTab: 'applications' | 'comments' = 'applications';
   
   // Opciones de estado
   statusOptions = ['Pending', 'Correct', 'Missing Documents', 'Incorrect'];
@@ -40,6 +42,51 @@ export class AdminDashboardComponent implements OnInit {
       console.error('Error cargando solicitudes:', err);
     } finally {
       this.loading = false;
+    }
+  }
+
+  async loadReportedComments() {
+    this.loading = true;
+    try {
+      this.reportedComments = await AdminService.getReportedComments();
+    } catch (err) {
+      console.error('Error cargando comentarios reportados:', err);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async switchTab(tab: 'applications' | 'comments') {
+    this.activeTab = tab;
+    this.selectedApp = null;
+    if (tab === 'applications') {
+      await this.loadApplications();
+    } else {
+      await this.loadReportedComments();
+    }
+  }
+
+  async deleteComment(id: number) {
+    if (confirm('¿Estás seguro de que quieres eliminar este comentario?')) {
+      try {
+        await AdminService.deleteComment(id);
+        await this.loadReportedComments();
+      } catch (err) {
+        console.error('Error eliminando comentario', err);
+        alert('Error al eliminar comentario');
+      }
+    }
+  }
+
+  async dismissReports(id: number) {
+    if (confirm('¿Estás seguro de que quieres ignorar los reportes de este comentario?')) {
+      try {
+        await AdminService.dismissCommentReports(id);
+        await this.loadReportedComments();
+      } catch (err) {
+        console.error('Error descartando reportes', err);
+        alert('Error al descartar reportes');
+      }
     }
   }
 
