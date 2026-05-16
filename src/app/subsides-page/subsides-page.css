@@ -119,3 +119,43 @@
     font-size: var(--font-size-sm);
     margin: var(--spacing-sm);
 }
+
+.document-review-status {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.document-review-status .status-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.admin-comments-box {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: white;
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 4px;
+}
+
+.status-badge.Pending {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+.status-badge.Correct {
+    background-color: #d1fae5;
+    color: #059669;
+}
+.status-badge.Missing-Documents {
+    background-color: #ffedd5;
+    color: #ea580c;
+}
+.status-badge.Incorrect {
+    background-color: #fee2e2;
+    color: #dc2626;
+}

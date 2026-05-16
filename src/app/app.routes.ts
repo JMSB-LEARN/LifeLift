@@ -9,6 +9,7 @@ import { SubsidesPage } from './subsides-page/subsides-page';
 import { UnemploymentPage } from './unemployment-page/unemployment-page';
 import { AboutPage } from './about-page/about-page';
 import { NotFoundComponent } from './not-found-component/not-found-component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -21,5 +22,6 @@ export const routes: Routes = [
     {path: 'subsides', component: SubsidesPage},
     {path: 'unemployment', component: UnemploymentPage},
     {path: 'about', component: AboutPage},
+    {path: 'admin', component: AdminDashboardComponent},
     {path: '**', component: NotFoundComponent}
 ];

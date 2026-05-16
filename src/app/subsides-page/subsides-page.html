@@ -80,6 +80,20 @@
                                 </div>
                             </div>
 
+                            <!-- Estado de revisión del documento -->
+                            <div class="document-review-status" *ngIf="isApplied(grant.id)">
+                                <div class="status-header">
+                                    <strong>Estado de Revisión:</strong>
+                                    <span class="status-badge" [ngClass]="getDocumentStatus(grant.id).replace(' ', '-')">
+                                        {{ getDocumentStatus(grant.id) }}
+                                    </span>
+                                </div>
+                                <div class="admin-comments-box" *ngIf="getAdminComments(grant.id)">
+                                    <strong>Comentarios del Administrador:</strong>
+                                    <p>{{ getAdminComments(grant.id) }}</p>
+                                </div>
+                            </div>
+
                             <div class="custom-upload-container">
                                 <label class="btn-pill btn-upload-trigger">
                                     {{ hasDocument(grant.id) ? 'Reemplazar archivo PDF' : 'Adjuntar documentación (PDF)' }}

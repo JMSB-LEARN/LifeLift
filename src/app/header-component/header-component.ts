@@ -15,6 +15,10 @@ export class HeaderComponent {
     return AuthService.isLoggedIn();
   }
 
+  get isAdmin(): boolean {
+    return AuthService.isAdmin();
+  }
+
   async logout() {
     await AuthService.logout();
     window.location.reload();

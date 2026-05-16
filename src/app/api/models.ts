@@ -23,6 +23,7 @@ export interface User {
   surname?: string;
   second_surname?: string;
   name?: string;
+  is_admin?: boolean;
 }
 
 export interface Profile {
@@ -107,6 +108,8 @@ export interface UserApplication {
   updated_at: string;
   has_document?: boolean;
   document_name?: string | null;
+  document_status?: string;
+  admin_comments?: string | null;
 }
 
 export interface GrantMatch {

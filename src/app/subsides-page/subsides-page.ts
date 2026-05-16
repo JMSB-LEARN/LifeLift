@@ -161,6 +161,14 @@ getFileName(grantId: number): string {
   return this.applications.find(a => a.grant_id === grantId)?.document_name || 'Archivo adjunto';
 }
 
+getDocumentStatus(grantId: number): string {
+  return this.applications.find(a => a.grant_id === grantId)?.document_status || 'Pending';
+}
+
+getAdminComments(grantId: number): string | null {
+  return this.applications.find(a => a.grant_id === grantId)?.admin_comments || null;
+}
+
   // Añade estos métodos a la clase SubsidesPage
 
   hasDocument(grantId: number): boolean {

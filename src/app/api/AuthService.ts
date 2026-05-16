@@ -86,6 +86,24 @@ class AuthService {
     return this.currentUser !== null;
   }
 
+  // Verifica si el usuario actual es administrador
+  isAdmin(): boolean {
+    return this.currentUser?.is_admin === true;
+  }
+
+  // Hacer al usuario actual administrador (solo para pruebas)
+  async makeMeAdmin(): Promise<void> {
+    const { data } = await api.client.post('/make-me-admin');
+    if (this.currentUser && data.user) {
+      this.currentUser.is_admin = data.user.is_admin;
+      try {
+        localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(this.currentUser));
+      } catch {
+        // Ignorar
+      }
+    }
+  }
+
   async logout(): Promise<void> {
     try {
       await api.client.post('/logout');
