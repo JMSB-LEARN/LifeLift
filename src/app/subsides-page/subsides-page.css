@@ -114,7 +114,10 @@
     text-align: left;
 }
 
-.grant-details * {
+.grant-details p,
+.grant-details span,
+.grant-details strong,
+.grant-details .file-label {
     color: var(--text-main);
     font-size: var(--font-size-sm);
     margin: var(--spacing-sm);

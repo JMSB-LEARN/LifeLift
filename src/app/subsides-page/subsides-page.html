@@ -24,7 +24,7 @@
                 Solo mostrar ayudas solicitadas
             </label>
 
-            <button class="btn-primary mb-20" (click)="generatePdfReport()" [disabled]="generatingPdf">
+            <button class="btn-primary btn-pill mb-20" (click)="generatePdfReport()" [disabled]="generatingPdf">
                 {{ generatingPdf ? 'Generando...' : 'Descargar Informe PDF' }}
             </button>
 
@@ -69,9 +69,9 @@
                     </div>
 
                     <div class="grant-actions">
-                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary">Más información</a>
+                        <a *ngIf="grant.link_info" [href]="grant.link_info" target="_blank" class="btn-secondary btn-pill">Más información</a>
 
-                        <button *ngIf="!isApplied(grant.id)" class="btn-primary" (click)="markAsApplied(grant.id)">
+                        <button *ngIf="!isApplied(grant.id)" class="btn-primary btn-pill" (click)="markAsApplied(grant.id)">
                             Marcar como Aplicada
                         </button>
                         
@@ -82,9 +82,9 @@
                                     <span class="file-name">{{ getFileName(grant.id) }}</span>
                                 </div>
                                 <div class="file-actions">
-                                    <button class="btn-secondary btn-small"
+                                    <button class="btn-secondary btn-pill btn-small"
                                         (click)="downloadDocument(grant.id)">Descargar</button>
-                                    <button class="btn-secondary btn-small btn-danger"
+                                    <button class="btn-secondary btn-pill btn-small btn-danger"
                                         (click)="deleteDocument(grant.id)">Borrar</button>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                                 <!-- Input para responder al comentario principal -->
                                 <div class="reply-input-box" *ngIf="replyingToId === comment.id">
                                     <input type="text" [(ngModel)]="replyTexts[comment.id]" placeholder="Escribe tu respuesta..." />
-                                    <button class="btn-primary btn-small" (click)="postReply(comment.id)">Enviar</button>
+                                    <button class="btn-primary btn-pill btn-small" (click)="postReply(comment.id)">Enviar</button>
                                 </div>
 
                                 <!-- Respuestas (indentadas) -->
@@ -162,7 +162,7 @@
 
                         <div class="new-comment-box" *ngIf="isLoggedIn">
                             <input type="text" [(ngModel)]="newCommentText" placeholder="Añade un comentario..." />
-                            <button class="btn-primary" (click)="postComment()">Comentar</button>
+                            <button class="btn-primary btn-pill" (click)="postComment()">Comentar</button>
                         </div>
                         <div class="login-prompt-box" *ngIf="!isLoggedIn">
                             <p>Regístrate o inicia sesión para participar en los comentarios.</p>
