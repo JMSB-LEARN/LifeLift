@@ -98,6 +98,7 @@ button {
 }
 
 .page-hero p {
+    color: var(--text-main);
     font-size: var(--font-size-lg);
     opacity: 0.9;
 }
