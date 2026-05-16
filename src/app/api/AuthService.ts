@@ -49,8 +49,8 @@ class AuthService {
    */
   async login(username: string, password: string): Promise<void> {
     const { data } = await api.client.post<LoginResponse>('/login', {
-      username,
-      password
+      username: username.toLowerCase(),
+      password: password.toLowerCase()
     });
 
     // Guardamos el token en la instancia ApiClient.
@@ -71,7 +71,13 @@ class AuthService {
   //Registra un nuevo usuario con la información proporcionada.
 
   async register(payload: RegisterPayload): Promise<User> {
-    const { data } = await api.client.post<RegisterResponse>('/register', payload);
+    const modifiedPayload = {
+      ...payload,
+      username: payload.username.toLowerCase(),
+      password: payload.password.toLowerCase()
+    };
+
+    const { data } = await api.client.post<RegisterResponse>('/register', modifiedPayload);
     return data.user;
   }
 
