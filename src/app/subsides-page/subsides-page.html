@@ -14,10 +14,19 @@
                 Ver ayudas a las que califico
             </label>
 
-            <label class="checkbox-container mb-20">
+            <label class="checkbox-container mb-10">
                 <input type="checkbox" [(ngModel)]="hideApplied" name="hideApplied" />
                 Ocultar ayudas a las que ya he aplicado
             </label>
+
+            <label class="checkbox-container mb-20">
+                <input type="checkbox" [(ngModel)]="showOnlyApplied" name="showOnlyApplied" />
+                Solo mostrar ayudas solicitadas
+            </label>
+
+            <button class="btn-primary mb-20" (click)="generatePdfReport()" [disabled]="generatingPdf">
+                {{ generatingPdf ? 'Generando...' : 'Descargar Informe PDF' }}
+            </button>
 
             <div *ngIf="!showOnlyQualified" class="manual-filters">
                 <h3 class="filter-title">Filtros manuales:</h3>

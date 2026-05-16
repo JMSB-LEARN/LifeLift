@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { api } from '../api/ApiClient';
 import CommentsService from '../api/CommentsService';
 import { GrantComment } from '../api/models';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-subsides-page',
@@ -20,6 +22,8 @@ export class SubsidesPage implements OnInit {
 
   showOnlyQualified = true;
   hideApplied = false;
+  showOnlyApplied = false;
+  generatingPdf = false;
 
   // Filtros Manuales
   filterUnemployment = false;
@@ -78,6 +82,7 @@ export class SubsidesPage implements OnInit {
     return this.grants.filter(grant => {
       const isApplied = this.applications.some(a => a.grant_id === grant.id);
       if (this.hideApplied && isApplied) return false;
+      if (this.showOnlyApplied && !isApplied) return false;
 
       if (this.searchText) {
         const search = this.searchText.toLowerCase();
@@ -289,5 +294,63 @@ getAdminComments(grantId: number): string | null {
   }
 
   
+  async generatePdfReport() {
+    this.generatingPdf = true;
+    try {
+      // 1. Fetch user profile
+      const profileRes = await api.client.get('/profile');
+      const profile = profileRes.data;
+
+      // 2. Prepare PDF
+      const doc = new jsPDF();
+      
+      // Título
+      doc.setFontSize(20);
+      doc.text('Informe de Ayudas Solicitadas - LifeLift', 14, 22);
+      
+      // Datos del usuario
+      doc.setFontSize(12);
+      doc.text(`Nombre completo: ${profile.first_name} ${profile.surname_1} ${profile.surname_2 || ''}`, 14, 32);
+      doc.text(`Documento (${profile.document_type}): ${profile.document_number}`, 14, 38);
+      doc.text(`Fecha de nacimiento: ${new Date(profile.birth_date).toLocaleDateString()}`, 14, 44);
+      if (profile.phone) doc.text(`Teléfono: ${profile.phone}`, 14, 50);
+      if (profile.address) doc.text(`Dirección: ${profile.address}, ${profile.postal_code}, ${profile.province}`, 14, 56);
+      
+      // 3. Preparar datos de las solicitudes
+      const tableData = this.applications.map(app => {
+        const grant = this.grants.find(g => g.id === app.grant_id);
+        const match = this.matches.find(m => m.grant_id === app.grant_id);
+        
+        const grantTitle = grant ? grant.title : 'Desconocida';
+        const docName = app.document_name ? app.document_name : 'Ninguno';
+        const dateStr = app.applied_at ? new Date(app.applied_at).toLocaleDateString() : 'Desconocida';
+        const status = app.status;
+        const recommended = match?.is_eligible ? 'Sí (Recomendada)' : 'No (Manual)';
+        
+        return [grantTitle, docName, dateStr, status, recommended];
+      });
+
+      if (tableData.length === 0) {
+        doc.text('No has solicitado ninguna ayuda.', 14, 70);
+      } else {
+        autoTable(doc, {
+          startY: 65,
+          head: [['Nombre de la Ayuda', 'Archivo Adjunto', 'Fecha', 'Estado', 'Recomendada']],
+          body: tableData,
+          styles: { fontSize: 9 },
+          headStyles: { fillColor: [41, 128, 185] }
+        });
+      }
+
+      // 4. Descargar
+      doc.save(`informe_ayudas_${profile.document_number}.pdf`);
+      
+    } catch (err) {
+      console.error('Error al generar el PDF', err);
+      alert('Error al generar el reporte en PDF.');
+    } finally {
+      this.generatingPdf = false;
+    }
+  }
 }
 
