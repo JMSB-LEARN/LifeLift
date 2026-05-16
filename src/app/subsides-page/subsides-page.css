@@ -114,8 +114,10 @@
     text-align: left;
 }
 
-.grant-details *{
+.grant-details * {
     color: var(--text-secondary);
+}
+.grant-details {
     font-size: var(--font-size-sm);
     margin-top: var(--spacing-sm);
 }
