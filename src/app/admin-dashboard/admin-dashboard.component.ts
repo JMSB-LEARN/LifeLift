@@ -126,10 +126,10 @@ export class AdminDashboardComponent implements OnInit {
 
   async downloadDocument(id: number, document_name: string) {
     try {
-      const pdfBase64 = await AdminService.getApplicationDocument(id);
+      const docData = await AdminService.getApplicationDocument(id);
       const link = document.createElement('a');
-      link.href = pdfBase64;
-      link.download = document_name || 'documento.pdf';
+      link.href = docData.document_pdf;
+      link.download = docData.document_name || document_name || 'documento.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
