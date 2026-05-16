@@ -7,6 +7,7 @@ import AuthService from '../api/AuthService';
 import { GrantComment } from '../api/models';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { api } from '../api/ApiClient';
 
 @Component({
   selector: 'app-subsides-page',
@@ -70,11 +71,18 @@ export class SubsidesPage implements OnInit {
   async fetchData() {
     this.loading = true;
     try {
-      const [grantsRes, appsRes, matchesRes] = await Promise.all([
-        api.client.get('/grants'),
-        api.client.get('/applications'),
-        api.client.get('/grant-matches')
-      ]);
+      const grantsReq = api.client.get('/grants').catch(() => ({ data: [] }));
+      
+      let appsRes = { data: [] };
+      let matchesRes = { data: [] };
+
+      if (this.isLoggedIn) {
+        appsRes = await api.client.get('/applications').catch(() => ({ data: [] }));
+        matchesRes = await api.client.get('/grant-matches').catch(() => ({ data: [] }));
+      }
+
+      const grantsRes = await grantsReq;
+      
       this.grants = grantsRes.data;
       this.applications = appsRes.data;
       this.matches = matchesRes.data;
