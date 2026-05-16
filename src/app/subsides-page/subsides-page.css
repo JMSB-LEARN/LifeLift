@@ -115,9 +115,7 @@
 }
 
 .grant-details * {
-    color: var(--text-secondary);
-}
-.grant-details {
+    color: var(--text-main);
     font-size: var(--font-size-sm);
-    margin-top: var(--spacing-sm);
+    margin: var(--spacing-sm);
 }
