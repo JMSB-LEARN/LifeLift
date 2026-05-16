@@ -45,7 +45,9 @@
                 [class.expanded]="expandedGrantId === grant.id">
                 <div class="grant-header" (click)="toggleExpand(grant.id)">
                     <div class="grant-title-group">
-                        <span class="status-badge" *ngIf="isApplied(grant.id)">Aplicada</span>
+                        <span class="status-badge" *ngIf="isApplied(grant.id)" [ngClass]="getDocumentStatus(grant.id).replace(' ', '-')">
+                            {{ getDocumentStatus(grant.id) }}
+                        </span>
                         <h3>{{ grant.title }}</h3>
                     </div>
                     <button class="expand-btn">{{ expandedGrantId === grant.id ? '▲' : '▼' }}</button>
@@ -81,14 +83,8 @@
                             </div>
 
                             <!-- Estado de revisión del documento -->
-                            <div class="document-review-status" *ngIf="isApplied(grant.id)">
-                                <div class="status-header">
-                                    <strong>Estado de Revisión:</strong>
-                                    <span class="status-badge" [ngClass]="getDocumentStatus(grant.id).replace(' ', '-')">
-                                        {{ getDocumentStatus(grant.id) }}
-                                    </span>
-                                </div>
-                                <div class="admin-comments-box" *ngIf="getAdminComments(grant.id)">
+                            <div class="document-review-status" *ngIf="isApplied(grant.id) && getAdminComments(grant.id)">
+                                <div class="admin-comments-box">
                                     <strong>Comentarios del Administrador:</strong>
                                     <p>{{ getAdminComments(grant.id) }}</p>
                                 </div>

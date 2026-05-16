@@ -84,3 +84,7 @@ router-outlet + * {
     color: var(--text-secondary);
     font-size: var(--font-size-sm);
 }
+
+.home-nav-button-container {
+    margin-top: var(--spacing-xl);
+}
