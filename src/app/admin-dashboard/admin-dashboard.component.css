@@ -331,3 +331,8 @@ textarea.form-control {
 .btn-secondary:hover {
   background-color: #f1f5f9;
 }
+
+.empty-state{
+  text-align: center;
+  color: var(--text-secondary);
+}
