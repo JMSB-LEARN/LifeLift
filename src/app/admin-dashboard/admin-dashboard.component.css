@@ -71,25 +71,7 @@
   font-size: 0.95rem;
 }
 
-/* Badges */
 
-
-.status-badge.Pending {
-  background-color: #fef3c7;
-  color: #d97706;
-}
-.status-badge.Correct {
-  background-color: #d1fae5;
-  color: #059669;
-}
-.status-badge.Missing-Documents {
-  background-color: #ffedd5;
-  color: #ea580c;
-}
-.status-badge.Incorrect {
-  background-color: #fee2e2;
-  color: #dc2626;
-}
 
 /* Editor Panel */
 .editor-panel {

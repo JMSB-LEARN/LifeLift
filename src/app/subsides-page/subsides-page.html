@@ -54,7 +54,9 @@
                 [class.expanded]="expandedGrantId === grant.id">
                 <div class="grant-header" (click)="toggleExpand(grant.id)">
                     <div class="grant-title-group">
-                        <span class="status-badge status-{{ getApplicationStatus(grant.id) }}" *ngIf="isApplied(grant.id)">{{ getApplicationStatusLabel(grant.id) }}</span>
+                        <span class="status-badge" [ngClass]="getDocumentStatus(grant.id).replace(' ', '-')" *ngIf="isApplied(grant.id)">
+                            {{ getDocumentStatus(grant.id) }}
+                        </span>
                         <h3>{{ grant.title }}</h3>
                     </div>
                     <button class="expand-btn">{{ expandedGrantId === grant.id ? '▲' : '▼' }}</button>

@@ -28,8 +28,8 @@
               (click)="selectApplication(app)">
               <div class="app-header">
                 <h3>{{app.first_name}} {{app.surname}} {{app.second_surname}}</h3>
-                <span class="status-badge status-{{(app.status || 'applied').toLowerCase()}}">
-                  {{getApplicationStatusLabel(app.status)}}
+                <span class="status-badge" [ngClass]="(app.document_status || 'Pending').replace(' ', '-')">
+                  {{app.document_status || 'Pending'}}
                 </span>
               </div>
               <p class="app-detail"><strong>Documento ID:</strong> {{app.document_type}} {{app.document_number}}</p>
