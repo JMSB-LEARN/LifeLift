@@ -1,8 +1,11 @@
 .admin-dashboard {
+  min-height: 50vh;
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   background: var(--surface-color);
+  border-radius: 12px;
+  ;
 }
 
 .admin-dashboard h2 {
