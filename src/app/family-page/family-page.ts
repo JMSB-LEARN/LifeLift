@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { api } from '../api/ApiClient';
 import AuthService from '../api/AuthService';
+import { Profile, SocioEconomicData, Housemate } from '../api/models';
 
 @Component({
   selector: 'app-family-page',
@@ -12,9 +13,9 @@ import AuthService from '../api/AuthService';
   styleUrl: './family-page.css',
 })
 export class FamilyPage implements OnInit {
-  profile: any = null;
-  socioEconomic: any = null;
-  housemates: any[] = [];
+  profile: Profile | null = null;
+  socioEconomic: SocioEconomicData | null = null;
+  housemates: Housemate[] = [];
   loading = true;
 
   async ngOnInit() {

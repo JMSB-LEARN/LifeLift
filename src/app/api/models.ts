@@ -110,6 +110,13 @@ export interface UserApplication {
   document_name?: string | null;
   document_status?: string;
   admin_comments?: string | null;
+  
+  // Campos de JOIN (admin/applications)
+  first_name?: string;
+  surname?: string;
+  second_surname?: string;
+  document_type?: string;
+  document_number?: string;
 }
 
 export interface GrantMatch {

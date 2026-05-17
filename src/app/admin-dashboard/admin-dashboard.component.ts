@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import AdminService from '../api/AdminService';
 import AuthService from '../api/AuthService';
-import { UserApplication } from '../api/models';
+import { UserApplication, GrantComment } from '../api/models';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -14,9 +14,9 @@ import { UserApplication } from '../api/models';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
-  applications: any[] = [];
-  reportedComments: any[] = [];
-  selectedApp: any = null;
+  applications: UserApplication[] = [];
+  reportedComments: GrantComment[] = [];
+  selectedApp: UserApplication | null = null;
   loading = true;
   saving = false;
   activeTab: 'applications' | 'comments' = 'applications';
@@ -39,10 +39,6 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   async ngOnInit() {
-    if (!AuthService.isAdmin()) {
-      this.router.navigate(['/']);
-      return;
-    }
     await this.loadApplications();
   }
 
@@ -102,7 +98,7 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  selectApplication(app: any) {
+  selectApplication(app: UserApplication) {
     // Clona el objeto para editar sin afectar la lista original hasta guardar
     this.selectedApp = { ...app };
     if (!this.selectedApp.document_status) {
@@ -116,12 +112,12 @@ export class AdminDashboardComponent implements OnInit {
     try {
       const updated = await AdminService.updateApplicationStatus(
         this.selectedApp.id,
-        this.selectedApp.document_status,
-        this.selectedApp.admin_comments
+        this.selectedApp.document_status || 'Pending',
+        this.selectedApp.admin_comments || null
       );
       
       // Actualiza en la lista
-      const index = this.applications.findIndex(a => a.id === this.selectedApp.id);
+      const index = this.applications.findIndex(a => a.id === this.selectedApp!.id);
       if (index !== -1) {
         this.applications[index].document_status = updated.document_status;
         this.applications[index].admin_comments = updated.admin_comments;

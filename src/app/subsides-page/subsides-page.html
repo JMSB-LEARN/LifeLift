@@ -119,57 +119,15 @@
                     </div>
 
                     <!-- SECCIÓN DE COMENTARIOS -->
-                    <div class="comments-section">
-                        <h4>Comentarios</h4>
-                        <div class="comments-list">
-                            <div class="comment-thread" *ngFor="let comment of comments">
-                                <!-- Comentario principal -->
-                                <div class="comment-card" [class.comment-deleted]="comment.is_deleted">
-                                    <div class="comment-body">
-                                        <strong>{{ comment.first_name }} {{ comment.surname }}:</strong>
-                                        <span [class.text-deleted]="comment.is_deleted">{{ comment.comment_text }}</span>
-                                    </div>
-                                    <div class="comment-actions" *ngIf="!comment.is_deleted">
-                                        <button class="btn-icon" *ngIf="isLoggedIn" (click)="toggleReply(comment.id)" title="Responder">
-                                            <i class="fa fa-reply"></i> ↩
-                                        </button>
-                                        <button class="btn-icon text-danger" (click)="reportComment(comment.id)" title="Reportar">
-                                            <i class="fa fa-flag"></i> 🚩
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Input para responder al comentario principal -->
-                                <div class="reply-input-box" *ngIf="replyingToId === comment.id">
-                                    <input type="text" [(ngModel)]="replyTexts[comment.id]" placeholder="Escribe tu respuesta..." />
-                                    <button class="btn-primary btn-pill btn-small" (click)="postReply(comment.id)">Enviar</button>
-                                </div>
-
-                                <!-- Respuestas (indentadas) -->
-                                <div class="replies-list" *ngIf="comment.replies && comment.replies.length > 0">
-                                    <div class="comment-card reply-card" *ngFor="let reply of comment.replies" [class.comment-deleted]="reply.is_deleted">
-                                        <div class="comment-body">
-                                            <strong>{{ reply.first_name }} {{ reply.surname }}:</strong>
-                                            <span [class.text-deleted]="reply.is_deleted">{{ reply.comment_text }}</span>
-                                        </div>
-                                        <div class="comment-actions" *ngIf="!reply.is_deleted">
-                                            <button class="btn-icon text-danger" (click)="reportComment(reply.id)" title="Reportar">
-                                                <i class="fa fa-flag"></i> 🚩
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="new-comment-box" *ngIf="isLoggedIn">
-                            <input type="text" [(ngModel)]="newCommentText" placeholder="Añade un comentario..." />
-                            <button class="btn-primary btn-pill" (click)="postComment()">Comentar</button>
-                        </div>
-                        <div class="login-prompt-box" *ngIf="!isLoggedIn">
-                            <p>Regístrate o inicia sesión para participar en los comentarios.</p>
-                        </div>
-                    </div>
+                    <app-grant-comments
+                        *ngIf="expandedGrantId === grant.id"
+                        [comments]="comments"
+                        [grantId]="grant.id"
+                        [isLoggedIn]="isLoggedIn"
+                        (postComment)="handlePostComment($event)"
+                        (replyComment)="handleReplyComment($event)"
+                        (report)="reportComment($event)">
+                    </app-grant-comments>
 
                 </div>
             </div>

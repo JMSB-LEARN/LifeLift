@@ -1,5 +1,5 @@
 import { api } from './ApiClient';
-import { UserApplication } from './models';
+import { UserApplication, GrantComment } from './models';
 
 class AdminService {
   /**
@@ -29,8 +29,8 @@ class AdminService {
     return data;
   }
 
-  async getReportedComments(): Promise<any[]> {
-    const { data } = await api.client.get<any[]>('/admin/comments/reported');
+  async getReportedComments(): Promise<GrantComment[]> {
+    const { data } = await api.client.get<GrantComment[]>('/admin/comments/reported');
     return data;
   }
 

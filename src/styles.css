@@ -2,18 +2,24 @@
 :root {
     --primary-color: #003288;
     --secondary-color: #008b5d;
-    --background-color: #f9fafbfb;
-    --surface-color: #f9fafbfb;
-    --text-main: #111827;
-    --text-secondary: #6B7280;
+    --background-color: #f9fafb;
+    --surface-color: #ffffff;
+    --surface-variant: #f8fafc;
+    --border-color: #e2e8f0;
+    
+    --text-main: #1f2937;
+    --text-secondary: #4b5563;
+    --text-disabled: #9ca3af;
+    
     --highlight-color: #FACC15;
     --alert-color: #F59E0B;
     --error-color: #EF4444;
-
+    --success-color: #10b981;
+    
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
+    --spacing-lg: 2rem;
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
 
@@ -230,17 +236,17 @@ button {
     text-transform: uppercase;
 }
 
-.status-badge.status-applied { background-color: #10b981; }
-.status-badge.status-approved { background-color: #10b981; }
-.status-badge.status-rejected { background-color: #ef4444; }
-.status-badge.status-interested { background-color: #f59e0b; }
+.status-badge.status-applied { background-color: var(--success-color); }
+.status-badge.status-approved { background-color: var(--success-color); }
+.status-badge.status-rejected { background-color: var(--error-color); }
+.status-badge.status-interested { background-color: var(--alert-color); }
 .status-badge.status-saved { background-color: #8b5cf6; }
-.status-badge.status-expired { background-color: #6b7280; }
+.status-badge.status-expired { background-color: var(--text-secondary); }
 
 .status-badge.Pending { background-color: #fef3c7; color: #d97706; }
-.status-badge.Correct { background-color: #d1fae5; color: #059669; }
+.status-badge.Correct { background-color: #d1fae5; color: var(--success-color); }
 .status-badge.Missing-Documents { background-color: #ffedd5; color: #ea580c; }
-.status-badge.Incorrect { background-color: #fee2e2; color: #dc2626; }
+.status-badge.Incorrect { background-color: #fee2e2; color: var(--error-color); }
 
 /* --- MOBILE OVERRIDES --- */
 @media (max-width: 767px) {

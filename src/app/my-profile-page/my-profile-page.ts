@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { api } from '../api/ApiClient';
 import AuthService from '../api/AuthService';
+import { Housemate } from '../api/models';
 
 @Component({
   selector: 'app-my-profile-page',
@@ -162,8 +163,8 @@ export class MyProfilePage implements OnInit {
       try {
         const hmRes = await api.client.get('/housemates');
         const hm = hmRes.data;
-        if (hm && hm.length > 0) {
-          this.profile.housemates = hm.map((h: any) => ({
+        if (hm) {
+          this.profile.housemates = hm.map((h: Housemate) => ({
             id: h.id,
             name: h.full_name || '',
             relation: h.relation || 'Other',

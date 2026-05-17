@@ -4,22 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import CommentsService from '../api/CommentsService';
 import AuthService from '../api/AuthService';
-import { GrantComment } from '../api/models';
+import { GovernmentGrant, UserApplication, GrantMatch, GrantComment } from '../api/models';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { api } from '../api/ApiClient';
+import { GrantCommentsComponent } from './grant-comments/grant-comments.component';
 
 @Component({
   selector: 'app-subsides-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GrantCommentsComponent],
   templateUrl: './subsides-page.html',
   styleUrl: './subsides-page.css',
 })
 export class SubsidesPage implements OnInit {
-  grants: any[] = [];
-  applications: any[] = [];
-  matches: any[] = [];
+  grants: GovernmentGrant[] = [];
+  applications: UserApplication[] = [];
+  matches: GrantMatch[] = [];
 
   showOnlyQualified = true;
   hideApplied = false;
@@ -39,9 +40,7 @@ export class SubsidesPage implements OnInit {
 
   // Comentarios state
   comments: GrantComment[] = [];
-  newCommentText: string = '';
-  replyTexts: { [commentId: number]: string } = {};
-  replyingToId: number | null = null;
+
 
   constructor(private route: ActivatedRoute) { }
   
@@ -101,7 +100,7 @@ export class SubsidesPage implements OnInit {
       if (this.searchText) {
         const search = this.searchText.toLowerCase();
         const titleMatch = grant.title.toLowerCase().includes(search);
-        const descMatch = grant.description.toLowerCase().includes(search);
+        const descMatch = (grant.description || '').toLowerCase().includes(search);
         if (!titleMatch && !descMatch) return false;
       }
 
@@ -130,8 +129,7 @@ export class SubsidesPage implements OnInit {
     if (this.expandedGrantId === grantId) {
       this.expandedGrantId = null;
       this.comments = [];
-      this.newCommentText = '';
-      this.replyingToId = null;
+
     } else {
       this.expandedGrantId = grantId;
       await this.loadComments(grantId);
@@ -169,15 +167,10 @@ export class SubsidesPage implements OnInit {
     return roots;
   }
 
-  async postComment() {
-    if (!this.isLoggedIn) {
-      alert('Debes estar registrado e iniciar sesión para comentar.');
-      return;
-    }
-    if (!this.expandedGrantId || !this.newCommentText.trim()) return;
+  async handlePostComment(event: {grantId: number, text: string}) {
+    if (!this.expandedGrantId) return;
     try {
-      await CommentsService.addComment(this.expandedGrantId, this.newCommentText);
-      this.newCommentText = '';
+      await CommentsService.addComment(event.grantId, event.text);
       await this.loadComments(this.expandedGrantId);
     } catch (err) {
       console.error('Error publicando comentario', err);
@@ -185,27 +178,10 @@ export class SubsidesPage implements OnInit {
     }
   }
 
-  toggleReply(commentId: number) {
-    if (this.replyingToId === commentId) {
-      this.replyingToId = null;
-    } else {
-      this.replyingToId = commentId;
-      if (!this.replyTexts[commentId]) {
-        this.replyTexts[commentId] = '';
-      }
-    }
-  }
-
-  async postReply(parentId: number) {
-    if (!this.isLoggedIn) {
-      alert('Debes estar registrado e iniciar sesión para responder.');
-      return;
-    }
-    if (!this.expandedGrantId || !this.replyTexts[parentId]?.trim()) return;
+  async handleReplyComment(event: {grantId: number, parentId: number, text: string}) {
+    if (!this.expandedGrantId) return;
     try {
-      await CommentsService.addComment(this.expandedGrantId, this.replyTexts[parentId], parentId);
-      this.replyTexts[parentId] = '';
-      this.replyingToId = null;
+      await CommentsService.addComment(event.grantId, event.text, event.parentId);
       await this.loadComments(this.expandedGrantId);
     } catch (err) {
       console.error('Error publicando respuesta', err);
@@ -273,6 +249,9 @@ async onFileSelected(event: any, grantId: number) {
   const reader = new FileReader();
   reader.onload = async () => {
     try {
+      if (!application) {
+        throw new Error('Application not found');
+      }
       await api.client.put(`/applications/${application.id}/document`, {
         document_pdf: reader.result as string,
         document_name: file.name

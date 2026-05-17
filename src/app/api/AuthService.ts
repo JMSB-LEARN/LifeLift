@@ -1,10 +1,9 @@
 import { api } from './ApiClient';
-import { User, DocumentTypeEnum } from './models';
+import { User, DocumentTypeEnum, Profile, SocioEconomicData, Housemate } from './models';
 
 // Expor User para que las importaciones existentes en los componentes no se rompan.
 export type { User };
 
-// Definicion de la respuesta esperada del endpoint de inicio de sesión.
 interface LoginResponse {
   token: string;
   user?: User;
@@ -128,8 +127,8 @@ class AuthService {
   }
 
   //Obtiene el perfil del usuario actual.
-  async getProfile(): Promise<any> {
-    const { data } = await api.client.get<any>('/profile');
+  async getProfile(): Promise<{ profile: Profile, socioEconomic: SocioEconomicData, housemates: Housemate[] }> {
+    const { data } = await api.client.get<{ profile: Profile, socioEconomic: SocioEconomicData, housemates: Housemate[] }>('/profile');
     return data;
   }
 

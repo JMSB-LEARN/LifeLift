@@ -51,7 +51,7 @@
 
               <div class="document-section" *ngIf="selectedApp.has_document">
                 <p><strong>Archivo subido:</strong> {{selectedApp.document_name}}</p>
-                <button class="btn-primary" (click)="downloadDocument(selectedApp.id, selectedApp.document_name)">
+                <button class="btn-primary" (click)="downloadDocument(selectedApp.id, selectedApp.document_name || '')">
                   Descargar / Ver PDF
                 </button>
               </div>

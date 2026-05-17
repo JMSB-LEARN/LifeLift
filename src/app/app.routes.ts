@@ -11,17 +11,20 @@ import { AboutPage } from './about-page/about-page';
 import { NotFoundComponent } from './not-found-component/not-found-component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
+import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
+
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'login', component: LogInComponent},
     {path: 'signup', component: SignUpComponent},
     {path: 'home', component: HomeComponent},
-    {path: 'profile', component: MyProfilePage},
+    {path: 'profile', component: MyProfilePage, canActivate: [AuthGuard]},
     {path: 'centers', component: CentersPage},
     {path: 'family', component: FamilyPage},
     {path: 'subsides', component: SubsidesPage},
     {path: 'unemployment', component: UnemploymentPage},
     {path: 'about', component: AboutPage},
-    {path: 'admin', component: AdminDashboardComponent},
+    {path: 'admin', component: AdminDashboardComponent, canActivate: [AdminGuard]},
     {path: '**', component: NotFoundComponent}
 ];
