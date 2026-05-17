@@ -517,7 +517,6 @@ input[type="checkbox"] {
 
 @media (max-width: 720px) {
     .hero {
-        min-height: auto;
         padding-bottom: var(--spacing-xl);
     }
 

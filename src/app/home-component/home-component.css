@@ -9,7 +9,6 @@ router-outlet + * {
 }
 
 .page-hero {
-    min-height: auto;
     padding-top: 8vh;
     padding-bottom: 4rem;
     display: block;
