@@ -22,8 +22,8 @@
     --spacing-lg: 2rem;
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
-
-    --font-family-base: system-ui, -apple-system, sans-serif;
+    
+    --font-family-base: "Inter", system-ui, -apple-system, sans-serif;
     --font-size-sm: 0.875rem;
     --font-size-base: 1rem;
     --font-size-lg: 1.125rem;
@@ -107,6 +107,7 @@ button {
     font-size: var(--font-size-lg);
     opacity: 0.9;
 }
+
 .page-container {
     width: 100%; 
     max-width: var(--windows-max-width);
@@ -224,7 +225,6 @@ button {
     margin-top: 2rem;
 }
 
-
 .status-badge {
     display: inline-block;
     background: #6b7280;
@@ -262,4 +262,10 @@ button {
     .page-container {
         margin-top: -2rem;
     }
+}
+
+/* --- FONT UTILITY --- */
+.font-inter {
+    font-family: "Inter", sans-serif;
+    font-style: normal;
 }
