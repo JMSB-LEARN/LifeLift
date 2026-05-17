@@ -229,6 +229,24 @@ export class SubsidesPage implements OnInit {
     return this.applications.some(a => a.grant_id === grantId);
   }
 
+  getApplicationStatus(grantId: number): string {
+    const app = this.applications.find(a => a.grant_id === grantId);
+    return app?.status || 'applied';
+  }
+
+  getApplicationStatusLabel(grantId: number): string {
+    const status = this.getApplicationStatus(grantId);
+    const labels: Record<string, string> = {
+      'interested': 'Interesado',
+      'saved': 'Guardada',
+      'applied': 'Aplicada',
+      'approved': 'Aprobada',
+      'rejected': 'Rechazada',
+      'expired': 'Expirada'
+    };
+    return labels[status] || status;
+  }
+
   async markAsApplied(grantId: number) {
     if (!this.isLoggedIn) {
       alert('Debes registrarte e iniciar sesión para solicitar una ayuda.');

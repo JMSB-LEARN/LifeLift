@@ -219,6 +219,24 @@ button {
 }
 
 
+.status-badge {
+    display: inline-block;
+    background: #6b7280;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-badge.status-applied { background-color: #3b82f6; }
+.status-badge.status-approved { background-color: #10b981; }
+.status-badge.status-rejected { background-color: #ef4444; }
+.status-badge.status-interested { background-color: #f59e0b; }
+.status-badge.status-saved { background-color: #8b5cf6; }
+.status-badge.status-expired { background-color: #6b7280; }
+
 /* --- MOBILE OVERRIDES --- */
 @media (max-width: 767px) {
     .page-hero {

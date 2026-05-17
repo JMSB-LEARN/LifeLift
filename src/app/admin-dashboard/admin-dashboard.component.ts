@@ -26,6 +26,18 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(private router: Router) {}
 
+  getApplicationStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      'interested': 'Interesado',
+      'saved': 'Guardada',
+      'applied': 'Aplicada',
+      'approved': 'Aprobada',
+      'rejected': 'Rechazada',
+      'expired': 'Expirada'
+    };
+    return labels[status?.toLowerCase() || 'applied'] || (status || 'applied');
+  }
+
   async ngOnInit() {
     if (!AuthService.isAdmin()) {
       this.router.navigate(['/']);

@@ -72,13 +72,7 @@
 }
 
 /* Badges */
-.status-badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
+
 
 .status-badge.Pending {
   background-color: #fef3c7;
