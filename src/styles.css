@@ -80,7 +80,7 @@ button {
 }
 
 .page-hero {
-    min-height: 90vh;
+    min-height: 95vh;
     background: linear-gradient(200deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: var(--text-main);
     padding: var(--spacing-2xl) var(--spacing-md);
@@ -156,7 +156,7 @@ button {
     color: var(--surface-color);
     padding: var(--spacing-2xl) var(--spacing-md);
     text-align: center;
-    min-height: 84vh;
+    min-height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -222,7 +222,7 @@ button {
 /* --- MOBILE OVERRIDES --- */
 @media (max-width: 767px) {
     .page-hero {
-        min-height: 60h;
+        min-height: 60vh;
         padding: var(--spacing-xl) var(--spacing-md);
     }
 
