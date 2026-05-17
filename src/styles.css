@@ -136,7 +136,7 @@ button {
 .page-hero p,
 .page-hero .empty-state,
 .page-hero .loading-state {
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 .page-hero .page-section {
